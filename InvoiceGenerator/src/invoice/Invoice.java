@@ -58,12 +58,13 @@ public class Invoice {
 				"    FOREIGN KEY (CustomerId) REFERENCES Customer (CustomerId) " + 
 				");"; 
 		String createOrders_Details = "CREATE TABLE IF NOT EXISTS Orders_Details (" + 
-				"  OrderId INTEGER NOT NULL PRIMARY KEY, " + 
-				"  ItemNumber INTEGER NOT NULL PRIMARY KEY, " + 
+				"  OrderId INTEGER NOT NULL, " + 
+				"  ItemNumber INTEGER NOT NULL, " + 
 				"  ProductId INTEGER, " + 
 				"  PurchasePrice DOUBLE NOT NULL, " + 
 				"  ItemQuantity INTEGER NOT NULL, " + 
 				"  ItemTotal DOUBLE NOT NULL, " + 
+				"  PRIMARY KEY(OrderId, ItemNumber)," +
 				"  CONSTRAINT FK_Orders_Details_Product FOREIGN KEY(ProductId) " +
 				" 	REFERENCES Product(ProductId), " + 
 				"  CONSTRAINT FK_Orders_Details_Orders FOREIGN KEY(OrderId) " +
@@ -73,7 +74,7 @@ public class Invoice {
 			stat.execute(createCustomer);
 			stat.execute(createProduct);
 			stat.execute(createOrders);
-			//stat.execute(createOrders_Details);
+			stat.execute(createOrders_Details);
 		}catch(SQLException e) {
 			//System.err.println("Error creating tables");
 			JOptionPane.showMessageDialog(null,  "Error with creating tables");
@@ -138,7 +139,7 @@ public class Invoice {
 						double purchasePrice, int itemQuantity, double itemTotal) {
 		try {
 			PreparedStatement prepStmt = con.prepareStatement(
-					"INSERT INTO Orders_Details VALUES(?, ?, ?, ?, ?, ?");
+					"INSERT INTO Orders_Details VALUES(?, ?, ?, ?, ?, ?);");
 			prepStmt.setInt(1, orderId);
 			prepStmt.setInt(2, itemNumber);
 			prepStmt.setInt(3, productId);
@@ -222,6 +223,29 @@ public class Invoice {
 			return null;
 		}
 		return orders_list;
+	}
+	public List<Orders_Details> selectOrders_Details(){
+		List<Orders_Details> orders_details_list = new LinkedList<Orders_Details>();
+		try {
+			ResultSet result = stat.executeQuery("SELECT * FROM Orders_Details");
+			int orderId, itemNumber, productId,itemQuantity;
+			double purchasePrice, itemTotal;
+			while(result.next()) {
+				orderId = result.getInt("orderId");
+				itemNumber = result.getInt("itemNumber");
+				productId = result.getInt("productId");
+				itemQuantity = result.getInt("itemQuantity");
+				purchasePrice = result.getDouble("purchasePrice");
+				itemTotal = result.getDouble("itemTotal");
+				orders_details_list.add(new Orders_Details(orderId, itemNumber, productId,
+											purchasePrice, itemQuantity, itemTotal));
+			}
+		}catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, "Error while selecting from Orders_Details");
+			e.printStackTrace();
+			return null;
+		}
+		return orders_details_list;
 	}
 	
 	public void closeConnection() {
