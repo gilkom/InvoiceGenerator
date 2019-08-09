@@ -14,7 +14,7 @@ public class Invoice {
 	private Connection con;
 	private Statement stat;
 	
-	public Invoice() {
+	public Invoice() {  
 		try {
 			Class.forName(Invoice.DRIVER);
 		}catch(ClassNotFoundException e) {
