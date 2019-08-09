@@ -5,7 +5,7 @@ public class Orders {
 	private int customerId;
 	private String orderDate;
 	private String invoiceDate;
-	private String orderTotal;
+	private double orderTotal;
 	
 	public int getOrderId() {
 		return orderId;
@@ -31,16 +31,16 @@ public class Orders {
 	public void setInvoiceDate(String invoiceDate) {
 		this.invoiceDate = invoiceDate;
 	}
-	public String getOrderTotal() {
+	public double getOrderTotal() {
 		return orderTotal;
 	}
-	public void setOrderTotal(String orderTotal) {
+	public void setOrderTotal(double orderTotal) {
 		this.orderTotal = orderTotal;
 	}
 	
 	public Orders() {};
 	public Orders(int orderId, int customerId, String orderDate,
-					String invoiceDate, String orderTotal) {
+					String invoiceDate, double orderTotal) {
 		this.orderId = orderId;
 		this.customerId = customerId;
 		this.orderDate = orderDate;
