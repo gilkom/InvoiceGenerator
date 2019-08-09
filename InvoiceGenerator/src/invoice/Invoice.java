@@ -9,7 +9,7 @@ import model.*;
 
 public class Invoice {
 	public static final String DRIVER="org.sqlite.JDBC";
-	public static final String DB_URL= "jdbc:sqlite:invoice";
+	public static final String DB_URL= "jdbc:sqlite:invoice_database";
 	
 	private Connection con;
 	private Statement stat;
@@ -35,34 +35,34 @@ public class Invoice {
 	}
 	public boolean createTables() {
 		String createCustomer= "CREATE TABLE IF NOT EXISTS Customer (" + 
-				"  CustomerId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " + 
-				"  CustomerName VARCHAR(45) NOT NULL, " + 
-				"  CustomerStreet VARCHAR(45) NOT NULL, " + 
-				"  CustomerCity VARCHAR(45) NOT NULL, " + 
-				"  CustomerPostCode VARCHAR(45) NOT NULL, " + 
-				"  CustomerNIP VARCHAR(45) NOT NULL " + 
+				"  CustomerId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + 
+				"  CustomerName VARCHAR(45), " + 
+				"  CustomerStreet VARCHAR(45), " + 
+				"  CustomerCity VARCHAR(45), " + 
+				"  CustomerPostCode VARCHAR(45), " + 
+				"  CustomerNIP VARCHAR(45)" + 
 				");";
 		String createProduct = "CREATE TABLE IF NOT EXISTS Product (" + 
-				"  ProductId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " + 
+				"  ProductId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + 
 				"  ProductName VARCHAR(45) NOT NULL, " + 
 				"  ProductPrice DOUBLE NOT NULL, " + 
-				"  ProductVAT INT NOT NULL " + 
+				"  ProductTax INT NOT NULL " + 
 				");" ;
 		String createOrders = "CREATE TABLE IF NOT EXISTS Orders (" + 
-				"  OrderId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " + 
-				"  CustomerId INT NOT NULL, " + 
+				"  OrderId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + 
+				"  CustomerId INTEGER NOT NULL, " + 
 				"  OrderDate DATE NOT NULL, " + 
 				"  InvoiceDate DATE NOT NULL, " + 
-				"  OrderTotal VARCHAR(45) NOT NULL, " + 
+				"  OrderTotal DOUBLE NOT NULL, " + 
 				"  CONSTRAINT fk_Orders_Customer " + 
 				"    FOREIGN KEY (CustomerId) REFERENCES Customer (CustomerId) " + 
 				");"; 
 		String createOrders_Details = "CREATE TABLE IF NOT EXISTS Orders_Details (" + 
-				"  OrderId INT NOT NULL PRIMARY KEY, " + 
-				"  ItemNumber INT NOT NULL PRIMARY KEY, " + 
-				"  ProductId INT, " + 
+				"  OrderId INTEGER NOT NULL PRIMARY KEY, " + 
+				"  ItemNumber INTEGER NOT NULL PRIMARY KEY, " + 
+				"  ProductId INTEGER, " + 
 				"  PurchasePrice DOUBLE NOT NULL, " + 
-				"  ItemQuantity INT NOT NULL, " + 
+				"  ItemQuantity INTEGER NOT NULL, " + 
 				"  ItemTotal DOUBLE NOT NULL, " + 
 				"  CONSTRAINT FK_Orders_Details_Product FOREIGN KEY(ProductId) " +
 				" 	REFERENCES Product(ProductId), " + 
@@ -73,7 +73,7 @@ public class Invoice {
 			stat.execute(createCustomer);
 			stat.execute(createProduct);
 			stat.execute(createOrders);
-			stat.execute(createOrders_Details);
+			//stat.execute(createOrders_Details);
 		}catch(SQLException e) {
 			//System.err.println("Error creating tables");
 			JOptionPane.showMessageDialog(null,  "Error with creating tables");
@@ -92,6 +92,7 @@ public class Invoice {
 			prepStmt.setString(3, customerCity);
 			prepStmt.setString(4, customerPostCode);
 			prepStmt.setString(5, customerNip);
+			prepStmt.execute();
 		}catch(SQLException e) {
 			//System.err.println("Error with inserting Customer");
 			JOptionPane.showMessageDialog(null, "Error with inserting Customer");
@@ -107,6 +108,7 @@ public class Invoice {
 			prepStmt.setString(1, productName);
 			prepStmt.setDouble(2, productPrice);
 			prepStmt.setInt(3, productTax);
+			prepStmt.execute();
 		}catch(SQLException e) {
 			//System.err.println("Error with inserting Product");
 			JOptionPane.showMessageDialog(null, "Error with inserting Product");
@@ -116,13 +118,14 @@ public class Invoice {
 		return true;
 	}
 	public boolean insertOrders(int customerId, String orderDate, String invoiceDate,
-						String orderTotal) {
+						double orderTotal) {
 		try {PreparedStatement prepStmt = con.prepareStatement(
 				"INSERT INTO Orders VALUES(NULL,? ,? ,?, ?);");
 			prepStmt.setInt(1, customerId);
 			prepStmt.setString(2, orderDate);
 			prepStmt.setString(3, invoiceDate);
-			prepStmt.setString(4, orderTotal);
+			prepStmt.setDouble(4, orderTotal);
+			prepStmt.execute();
 		}catch(SQLException e) {
 			//System.err.println("Error with inserting Orders");
 			JOptionPane.showMessageDialog(null, "Error with inserting Orders");
@@ -142,6 +145,7 @@ public class Invoice {
 			prepStmt.setDouble(4, purchasePrice);   
 			prepStmt.setInt(5, itemQuantity);
 			prepStmt.setDouble(6, itemTotal);
+			prepStmt.execute();
 		}catch(SQLException e){
 			//System.err.println("Error with inserting Orders_Details");
 			JOptionPane.showMessageDialog(null, "Error with inserting Orders_Details");
@@ -149,6 +153,85 @@ public class Invoice {
 			return false;
 		}
 		return true;
+	}
+	public List<Customer> selectCustomer(){
+		List<Customer> customers = new LinkedList<Customer>();
+		try {
+			ResultSet result = stat.executeQuery("SELECT * FROM Customer;");
+			int customerId;
+			String customerName, customerStreet, customerCity,
+					customerPostCode, customerNip;
+			while(result.next()) {
+				customerId = result.getInt("customerId");
+				customerName = result.getString("customerName");
+				customerStreet = result.getString("customerStreet");
+				customerCity = result.getString("customerCity");
+				customerPostCode = result.getString("customerPostCode");
+				customerNip = result.getString("customerNip");
+				customers.add(new Customer(customerId, customerName,
+										customerStreet, customerCity, 
+										customerPostCode,customerNip));
+			}
+		}catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, "Error while selecting from customers");
+			e.printStackTrace();
+			return null;
+		}
+		return customers;
+	}
+	public List<Product> selectProduct(){
+		List<Product> products = new LinkedList<Product>();
+		try {
+			ResultSet result = stat.executeQuery("SELECT * FROM Product;");
+			int productId, productTax;
+			String productName;
+			double productPrice;
+			while(result.next()) {
+				productId = result.getInt("productId");
+				productTax = result.getInt("productTax");
+				productName = result.getString("productName");
+				productPrice = result.getDouble("productPrice");
+				products.add(new Product(productId, productName, productPrice, productTax));
+			}
+		}catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, "Error while selecting from products");
+			e.printStackTrace();
+			return null;
+		}
+		return products;
+	}
+	public List<Orders> selectOrders(){
+		List<Orders> orders_list = new LinkedList<Orders>();
+		try {
+			ResultSet result = stat.executeQuery("SELECT * FROM Orders");
+			int orderId, customerId;
+			String orderDate, invoiceDate;
+			double orderTotal;
+			while(result.next()) {
+				orderId = result.getInt("orderId");
+				customerId = result.getInt("customerId");
+				orderDate = result.getString("orderDate");
+				invoiceDate =result.getString("invoiceDate");
+				orderTotal = result.getDouble("orderTotal");
+				orders_list.add(new Orders(orderId, customerId, orderDate,
+												invoiceDate, orderTotal));
+			}
+		}catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, "Error while selecting from orders");
+			e.printStackTrace();
+			return null;
+		}
+		return orders_list;
+	}
+	
+	public void closeConnection() {
+		try {
+			con.close();
+		}catch(SQLException e) {
+			//System.err.println("Problem with closing connection");
+			JOptionPane.showMessageDialog(null, "Problem with closing connection");
+			e.printStackTrace();
+		}
 	}
 	
 }
