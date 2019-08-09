@@ -19,6 +19,24 @@ public class JDBCTest {
 		for(Customer c : customersi)
 			System.out.println(c);
 		
+		i.insertProduct("Adidas shoe size 43qwerqwer",199.99, 12);
+		i.insertProduct("Lamp",19.59, 12);
+		i.insertProduct("Rounded table, color white",259.99, 22);
+		
+		List<Product> products = i.selectProduct();
+		System.out.println("List of products");
+		for(Product p : products)
+			System.out.println(p);
+		
+		i.insertOrders(2, "12-02-2019", "14-03-2019kj", 1243.12);
+		i.insertOrders(2, "11-01-2016", "21-02-2016", 924.52);
+		i.insertOrders(2, "01-12-2019", "27-12-2019", 34.67);
+		
+		List<Orders> orders_list = i.selectOrders();
+		System.out.println("List of orders");
+		for(Orders o : orders_list)
+			System.out.println(o);
+		
 		
 	}
 }
