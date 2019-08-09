@@ -1,6 +1,7 @@
 package test;
 
 import java.util.List;
+import java.sql.*;
 
 import model.*;
 import invoice.*;
@@ -37,12 +38,12 @@ public class JDBCTest {
 		System.out.println("List of orders");
 		for(Orders o : orders_list)
 			System.out.println(o);
-		
+
 		i.insertOrders_Details(1,7,3, 12.44,4, 12.44);
 		i.insertOrders_Details(1,5,1, 56.3 ,5, 5*56.3);
 		i.insertOrders_Details(1,8,2, 22.99,3, 3*22.99);
 		i.insertOrders_Details(2,3,2, 92.44,2, 2*92.44);
-		
+
 		List<Orders_Details> orders_details_list = i.selectOrders_Details();
 		System.out.println("List of Orders Details");
 		for(Orders_Details od : orders_details_list)
