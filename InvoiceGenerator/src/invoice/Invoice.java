@@ -139,7 +139,7 @@ public class Invoice {
 			prepStmt.setInt(1, orderId);
 			prepStmt.setInt(2, itemNumber);
 			prepStmt.setInt(3, productId);
-			prepStmt.setDouble(4, purchasePrice);
+			prepStmt.setDouble(4, purchasePrice);   
 			prepStmt.setInt(5, itemQuantity);
 			prepStmt.setDouble(6, itemTotal);
 		}catch(SQLException e){
