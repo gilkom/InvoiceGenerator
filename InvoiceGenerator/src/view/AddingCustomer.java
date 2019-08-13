@@ -46,6 +46,12 @@ public class AddingCustomer {
 		accept.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				DataMatcher d = new DataMatcher();
+				
+				if(!(d.custNamePattern(nameField.getText()))) {
+					JOptionPane.showMessageDialog(null, "Wrong customer name!");
+				};
+				
 				Control.addCustomer(nameField.getText(), streetField.getText(),
 						cityField.getText(), postCodeField.getText(), nipField.getText());
 				tab.setModel(Control.populateCustomer());
