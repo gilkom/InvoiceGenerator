@@ -36,11 +36,11 @@ public class Invoice {
 	public boolean createTables() {
 		String createCustomer= "CREATE TABLE IF NOT EXISTS Customer (" + 
 				"  CustomerId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + 
-				"  CustomerName VARCHAR(45), " + 
-				"  CustomerStreet VARCHAR(45), " + 
-				"  CustomerCity VARCHAR(45), " + 
-				"  CustomerPostCode VARCHAR(45), " + 
-				"  CustomerNIP VARCHAR(45)" + 
+				"  CustomerName VARCHAR(45) NOT NULL, " + 
+				"  CustomerStreet VARCHAR(45) NOT NULL, " + 
+				"  CustomerCity VARCHAR(45) NOT NULL, " + 
+				"  CustomerPostCode VARCHAR(6) NOT NULL, " + 
+				"  CustomerNIP VARCHAR(10) NOT NULL" + 
 				");";
 		String createProduct = "CREATE TABLE IF NOT EXISTS Product (" + 
 				"  ProductId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + 

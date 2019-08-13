@@ -1,7 +1,8 @@
 package view;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+
+import control.Control;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -12,7 +13,7 @@ import invoice.*;
 import model.*;
 
 public class CustomerSearch {
-
+	JTable table;
 	
 	
 	public CustomerSearch(){
@@ -30,12 +31,23 @@ public class CustomerSearch {
 		SouthPan.setPreferredSize(new Dimension(10,30));
 		
 		JPanel ButPan = new JPanel(new FlowLayout(20,20,20));
-		//ButPan.setBackground(Color.RED);
 		
+//Button "Add" opens AddingCustomer panel in which we can add new customer
 		JButton add = new JButton("Add");
 		add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new AddingCustomer();
+				new AddingCustomer(table);
+				
+				table.setModel(Control.populateCustomer());
+				
+				//setting table size
+				table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+				table.getColumnModel().getColumn(0).setPreferredWidth(40);
+				table.getColumnModel().getColumn(1).setPreferredWidth(300);
+				table.getColumnModel().getColumn(2).setPreferredWidth(119);
+				table.getColumnModel().getColumn(3).setPreferredWidth(100);
+				table.getColumnModel().getColumn(4).setPreferredWidth(60);
+				table.getColumnModel().getColumn(5).setPreferredWidth(80);
 			}
 		});
 		
@@ -51,30 +63,9 @@ public class CustomerSearch {
 		TabPan.setBackground(Color.green);
 		
 		
-		Invoice inv = new Invoice();
-		List<Customer> customers = inv.selectCustomer() ;
-		
-		DefaultTableModel model = new DefaultTableModel(
-				new String[]{"Id", "Name", "Street", "City", "Post code", "Nip"},0);
-				
-		for(Customer c : customers) {
-			model.addRow(new Object[] {c.getCustomerId(),c.getCustomerName(), c.getCustomerStreet(),
-					c.getCustomerCity(), c.getCustomerPostCode(), c.getCustomerNip()});
-		}
-		
-		String[][] rows = new String[100][100];
-		for(Customer c : customers) {
-			for(int i = 0;i < 100; i++) {
-				for(int j = 0; j < 100; j++) {
-					//String x = "" + c.getC;
-					rows[i][0] = Integer.valueOf(c.getCustomerId()).toString();
-				}
-			}
-		}
-		
-		
-		JTable table = new JTable(model);
+		table = new JTable(Control.populateCustomer());
 
+		
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.getColumnModel().getColumn(0).setPreferredWidth(40);
 		table.getColumnModel().getColumn(1).setPreferredWidth(300);
