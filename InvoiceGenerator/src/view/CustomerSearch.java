@@ -36,7 +36,7 @@ public class CustomerSearch {
 		JButton add = new JButton("Add");
 		add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new AddingCustomer(table);
+				new AddingCustomer(table,f);
 				
 				table.setModel(Control.populateCustomer());
 				

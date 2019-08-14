@@ -16,9 +16,9 @@ public class JDBCTest {
 		i.insertCustomer("Stokrotka Sp.z o.o.", "Marsza³kowska 123/12",
 						"Warszawa","01-112", "1234567890");
 		i.insertCustomer("Adidas Polska", "Wolska 3/2", 
-						"Warszawa","02-123", "43523425345");
+						"Warszawa","02-123", "4352342534");
 		i.insertCustomer("Jeronimo Martins Polska", "Dolna 3",
-						"Warszawa","02-343","24352345234");
+						"Warszawa","02-343","2435234523");
 		List<Customer> customersi = i.selectCustomer();
 		System.out.println("List of customers");
 		for(Customer c : customersi)

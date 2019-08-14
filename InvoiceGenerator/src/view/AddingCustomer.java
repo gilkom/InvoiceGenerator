@@ -13,12 +13,22 @@ import invoice.*;
 
 public class AddingCustomer {
 	
-	public AddingCustomer(JTable tab) {
+	public AddingCustomer(JTable tab, JFrame fr) {
 		
-		JFrame f = new JFrame("New customer:");
-		f.setLayout(new BorderLayout());
+		//JFrame f = new JFrame("New customer:");
+		
+		
+		JDialog dial =new JDialog(fr,"New customer: ", JDialog.DEFAULT_MODALITY_TYPE);
+		dial.setLayout(new BorderLayout());
+		dial.setPreferredSize(new Dimension(600,200));
+		dial.setResizable(false);
+		dial.setLocation(100,100);
+
+
 		
 		JPanel pan = new JPanel(new FlowLayout(10));
+
+		
 		pan.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		
 		JLabel nameLabel = new JLabel("Name:");
@@ -47,23 +57,29 @@ public class AddingCustomer {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				DataMatcher d = new DataMatcher();
-				
-				if(!(d.custNamePattern(nameField.getText()))) {
-					JOptionPane.showMessageDialog(null, "Wrong customer name!");
-				};
-				
-				Control.addCustomer(nameField.getText(), streetField.getText(),
+				String message = d.custPattern(nameField.getText(), streetField.getText(),
 						cityField.getText(), postCodeField.getText(), nipField.getText());
-				tab.setModel(Control.populateCustomer());
 				
-				//setting table size
-				tab.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-				tab.getColumnModel().getColumn(0).setPreferredWidth(40);
-				tab.getColumnModel().getColumn(1).setPreferredWidth(300);
-				tab.getColumnModel().getColumn(2).setPreferredWidth(119);
-				tab.getColumnModel().getColumn(3).setPreferredWidth(100);
-				tab.getColumnModel().getColumn(4).setPreferredWidth(60);
-				tab.getColumnModel().getColumn(5).setPreferredWidth(80);
+				if(message.matches("ok")) {
+					//JOptionPane.showMessageDialog(null, "Good customer name!");
+					Control.addCustomer(nameField.getText(), streetField.getText(),
+							cityField.getText(), postCodeField.getText(), nipField.getText());
+					tab.setModel(Control.populateCustomer());
+					
+					//setting table size
+					tab.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+					tab.getColumnModel().getColumn(0).setPreferredWidth(40);
+					tab.getColumnModel().getColumn(1).setPreferredWidth(300);
+					tab.getColumnModel().getColumn(2).setPreferredWidth(119);
+					tab.getColumnModel().getColumn(3).setPreferredWidth(100);
+					tab.getColumnModel().getColumn(4).setPreferredWidth(60);
+					tab.getColumnModel().getColumn(5).setPreferredWidth(80);
+					
+					dial.dispose();
+				}else {
+					JOptionPane.showMessageDialog(null, message);
+				}
+				
 			}
 		});
 		
@@ -71,7 +87,7 @@ public class AddingCustomer {
 		cancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				f.dispose();	
+				dial.dispose();	
 			}
 		});
 		
@@ -88,16 +104,13 @@ public class AddingCustomer {
 		pan.add(nipField);
 		butPan.add(accept);
 		butPan.add(cancel);
-		f.add(pan, BorderLayout.CENTER);
-		f.add(butPan, BorderLayout.SOUTH);
+		dial.add(pan, BorderLayout.CENTER);
+		dial.add(butPan, BorderLayout.SOUTH);
 		
 		SwingUtilities.invokeLater(new Runnable(){
 			public void run() {
-			f.pack();
-			f.setVisible(true);
-			f.setSize(600,200);
-			f.setLocation(100, 100);
-			f.setResizable(false);
+			dial.pack();
+			dial.setVisible(true);
 			}
 		});
 	}
