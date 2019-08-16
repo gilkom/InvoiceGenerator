@@ -102,22 +102,30 @@ public class Invoice {
 		}
 		return true;
 	}
-	
-	public boolean deleteCustomer(int customerId) {
+	public boolean updateCustomer(int customerId,String customerName, String customerStreet,
+					String customerCity, String customerPostCode, String customerNip) {
 		try {
 			PreparedStatement prepStmt = con.prepareStatement(
-					"DELETE FROM Customer WHERE customerId = ?;");
-			prepStmt.setInt(1,customerId);
+					"UPDATE Customer SET CustomerName = ?,"
+									+ " CustomerStreet = ?,"
+									+ " CustomerCity = ?,"
+									+ " CustomerPostCode = ?,"
+									+ " CustomerNip = ?"
+					+ " WHERE CustomerId = ?;");
+			prepStmt.setString(1, customerName);
+			prepStmt.setString(2, customerStreet);
+			prepStmt.setString(3, customerCity);
+			prepStmt.setString(4, customerPostCode);
+			prepStmt.setString(5, customerNip);
+			prepStmt.setInt(6, customerId);
 			prepStmt.execute();
 		}catch(SQLException e) {
-			JOptionPane.showMessageDialog(null, "Error with deleting Customer");
+			JOptionPane.showMessageDialog(null,"Error with updating customer");
 			e.printStackTrace();
 			return false;
 		}
-		
 		return true;
 	}
-	
 	
 	public boolean insertProduct(String productName, double productPrice, int productTax) {
 		try {
@@ -172,6 +180,24 @@ public class Invoice {
 		}
 		return true;
 	}
+	
+	public boolean deleteCustomer(int customerId) {
+		try {
+			PreparedStatement prepStmt = con.prepareStatement(
+					"DELETE FROM Customer WHERE customerId = ?;");
+			prepStmt.setInt(1,customerId);
+			prepStmt.execute();
+		}catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, "Error with deleting Customer");
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
+	
+	
+	
 	public List<Customer> selectCustomer(){
 		List<Customer> customers = new LinkedList<Customer>();
 		try {
@@ -197,6 +223,9 @@ public class Invoice {
 		}
 		return customers;
 	}
+	
+
+	
 	public List<Product> selectProduct(){
 		List<Product> products = new LinkedList<Product>();
 		try {

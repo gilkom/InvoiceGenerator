@@ -22,7 +22,13 @@ public class Control {
 		i.deleteCustomer(customerId);
 	}
 	
-	
+	public static void updCustomer(int customerId, String customerName, String customerStreet,
+							String customerCity, String customerPostCode, String customerNip)
+	{
+		Invoice i = new Invoice();
+		i.updateCustomer(customerId, customerName, customerStreet, customerCity, 
+							customerPostCode, customerNip);
+	}
 	public static DefaultTableModel populateCustomer() {
 		Invoice i = new Invoice();
 		List<Customer> customers = i.selectCustomer();
