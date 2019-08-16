@@ -102,6 +102,23 @@ public class Invoice {
 		}
 		return true;
 	}
+	
+	public boolean deleteCustomer(int customerId) {
+		try {
+			PreparedStatement prepStmt = con.prepareStatement(
+					"DELETE FROM Customer WHERE customerId = ?;");
+			prepStmt.setInt(1,customerId);
+			prepStmt.execute();
+		}catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, "Error with deleting Customer");
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
+	
+	
 	public boolean insertProduct(String productName, double productPrice, int productTax) {
 		try {
 			PreparedStatement prepStmt = con.prepareStatement(

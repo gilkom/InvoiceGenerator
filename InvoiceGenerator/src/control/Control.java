@@ -17,6 +17,11 @@ public class Control {
 						customerPostCode, customerNip);
 	}
 	
+	public static void removeCustomer(int customerId) {
+		Invoice i = new Invoice();
+		i.deleteCustomer(customerId);
+	}
+	
 	
 	public static DefaultTableModel populateCustomer() {
 		Invoice i = new Invoice();

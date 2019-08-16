@@ -51,17 +51,19 @@ public class AddingCustomer {
 		
 		JPanel butPan = new JPanel(new FlowLayout(FlowLayout.RIGHT,20,10));
 	
-		
+//Button accepting customer values typed in the panel
 		JButton accept = new JButton("Accept");
 		accept.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				//message returns the String with error message when some of the fields are not right
 				DataMatcher d = new DataMatcher();
 				String message = d.custPattern(nameField.getText(), streetField.getText(),
 						cityField.getText(), postCodeField.getText(), nipField.getText());
 				
+					//adding customer if there is no error message or open JOptionPane with error		
 				if(message.matches("ok")) {
-					//JOptionPane.showMessageDialog(null, "Good customer name!");
 					Control.addCustomer(nameField.getText(), streetField.getText(),
 							cityField.getText(), postCodeField.getText(), nipField.getText());
 					tab.setModel(Control.populateCustomer());
@@ -74,6 +76,11 @@ public class AddingCustomer {
 					tab.getColumnModel().getColumn(3).setPreferredWidth(100);
 					tab.getColumnModel().getColumn(4).setPreferredWidth(60);
 					tab.getColumnModel().getColumn(5).setPreferredWidth(80);
+					
+					//selecting last row
+					int rowCount = tab.getRowCount();					
+					tab.getSelectionModel().setSelectionInterval(rowCount-1, rowCount-1);
+					tab.scrollRectToVisible(new Rectangle(tab.getCellRect(rowCount-1, 0,  true)));
 					
 					dial.dispose();
 				}else {
