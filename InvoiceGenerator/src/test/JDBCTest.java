@@ -11,7 +11,9 @@ import view.*;
 public class JDBCTest {
 	public static void main(String[] args) {
 		//CustomerSearch custPane = new CustomerSearch();
-		ProductSearch prodPane = new ProductSearch();
+		//ProductSearch prodPane = new ProductSearch();
+		CreateInvoice creInvoice = new CreateInvoice();
+		
 		Invoice i = new Invoice();
 		
 		i.insertCustomer("Stokrotka Sp.z o.o.", "Marsza³kowska 123/12",
