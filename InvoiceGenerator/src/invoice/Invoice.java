@@ -14,6 +14,16 @@ public class Invoice {
 	private Connection con;
 	private Statement stat;
 	
+	//----------------------------------------------------------------	
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	//-------Creating connection------------------------------------------
+	//----------------------------------------------------------------	
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	
+	
 	public Invoice() {  
 		try {
 			Class.forName(Invoice.DRIVER);
@@ -33,6 +43,15 @@ public class Invoice {
 		}
 		createTables();
 	}
+	
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	//-------Creating Tables------------------------------------------
+	//----------------------------------------------------------------	
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	
 	public boolean createTables() {
 		String createCustomer= "CREATE TABLE IF NOT EXISTS Customer (" + 
 				"  CustomerId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + 
@@ -83,6 +102,15 @@ public class Invoice {
 		}
 		return true;
 	}
+	
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	//---Customer insert update delete select-------------------------
+	//----------------------------------------------------------------	
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	
 	public boolean insertCustomer(String customerName, String customerStreet,
 					String customerCity, String customerPostCode, String customerNip) {
 		try {
@@ -126,60 +154,7 @@ public class Invoice {
 		}
 		return true;
 	}
-	
-	public boolean insertProduct(String productName, double productPrice, int productTax) {
-		try {
-			PreparedStatement prepStmt = con.prepareStatement(
-					"INSERT INTO Product VALUES(NULL,?,?,?);");
-			prepStmt.setString(1, productName);
-			prepStmt.setDouble(2, productPrice);
-			prepStmt.setInt(3, productTax);
-			prepStmt.execute();
-		}catch(SQLException e) {
-			//System.err.println("Error with inserting Product");
-			JOptionPane.showMessageDialog(null, "Error with inserting Product");
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}
-	public boolean insertOrders(int customerId, String orderDate, String invoiceDate,
-						double orderTotal) {
-		try {PreparedStatement prepStmt = con.prepareStatement(
-				"INSERT INTO Orders VALUES(NULL,? ,? ,?, ?);");
-			prepStmt.setInt(1, customerId);
-			prepStmt.setString(2, orderDate);
-			prepStmt.setString(3, invoiceDate);
-			prepStmt.setDouble(4, orderTotal);
-			prepStmt.execute();
-		}catch(SQLException e) {
-			//System.err.println("Error with inserting Orders");
-			JOptionPane.showMessageDialog(null, "Error with inserting Orders");
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}
-	public boolean insertOrders_Details(int orderId, int itemNumber, int productId,
-						double purchasePrice, int itemQuantity, double itemTotal) {
-		try {
-			PreparedStatement prepStmt = con.prepareStatement(
-					"INSERT INTO Orders_Details VALUES(?, ?, ?, ?, ?, ?);");
-			prepStmt.setInt(1, orderId);
-			prepStmt.setInt(2, itemNumber);
-			prepStmt.setInt(3, productId);
-			prepStmt.setDouble(4, purchasePrice);   
-			prepStmt.setInt(5, itemQuantity);
-			prepStmt.setDouble(6, itemTotal);
-			prepStmt.execute();
-		}catch(SQLException e){
-			//System.err.println("Error with inserting Orders_Details");
-			JOptionPane.showMessageDialog(null, "Error with inserting Orders_Details");
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}
+
 	
 	public boolean deleteCustomer(int customerId) {
 		try {
@@ -196,8 +171,7 @@ public class Invoice {
 		return true;
 	}
 	
-	
-	
+
 	public List<Customer> selectCustomer(){
 		List<Customer> customers = new LinkedList<Customer>();
 		try {
@@ -224,6 +198,94 @@ public class Invoice {
 		return customers;
 	}
 	
+	public List<Customer> selectCustomerLike(String likeName){
+		List<Customer> customers = new LinkedList<Customer>();
+		try {
+			ResultSet result = stat.executeQuery(
+					"SELECT * FROM Customer WHERE CustomerName LIKE '%" + likeName +"%';");
+			int customerId;
+			String customerName, customerStreet, customerCity,
+					customerPostCode, customerNip;
+			while(result.next()) {
+				customerId = result.getInt("customerId");
+				customerName = result.getString("customerName");
+				customerStreet = result.getString("customerStreet");
+				customerCity = result.getString("customerCity");
+				customerPostCode = result.getString("customerPostCode");
+				customerNip = result.getString("customerNip");
+				customers.add(new Customer(customerId, customerName,
+										customerStreet, customerCity, 
+										customerPostCode,customerNip));
+			}
+		}catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, "Error while selecting from customers");
+			e.printStackTrace();
+			return null;
+		}
+		return customers;
+	}
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	//---Product insert update delete select-------------------------
+	//----------------------------------------------------------------	
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	
+	public boolean insertProduct(String productName, double productPrice, int productTax) {
+		try {
+			PreparedStatement prepStmt = con.prepareStatement(
+					"INSERT INTO Product VALUES(NULL,?,?,?);");
+			prepStmt.setString(1, productName);
+			prepStmt.setDouble(2, productPrice);
+			prepStmt.setInt(3, productTax);
+			prepStmt.execute();
+		}catch(SQLException e) {
+			//System.err.println("Error with inserting Product");
+			JOptionPane.showMessageDialog(null, "Error with inserting Product");
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+		
+	public boolean updateProduct(int productId,String productName, 
+			double productPrice, int productTax) {
+		try {
+			PreparedStatement prepStmt = con.prepareStatement(
+					"UPDATE Product SET ProductName = ?,"
+									+ " ProductPrice = ?,"
+									+ " ProductTax = ?"
+					+ " WHERE ProductId = ?;");
+			prepStmt.setString(1, productName);
+			prepStmt.setDouble(2, productPrice);
+			prepStmt.setInt(3, productTax);
+			prepStmt.setInt(4, productId);
+			prepStmt.execute();
+		}catch(SQLException e) {
+			JOptionPane.showMessageDialog(null,"Error with updating product");
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+		}
+		
+		
+	public boolean deleteProduct(int productId) {
+		try {
+			PreparedStatement prepStmt = con.prepareStatement(
+					"DELETE FROM Product WHERE productId = ?;");
+			prepStmt.setInt(1,productId);
+			prepStmt.execute();
+		}catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, "Error with deleting Product");
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+		}
+		
 
 	
 	public List<Product> selectProduct(){
@@ -247,6 +309,58 @@ public class Invoice {
 		}
 		return products;
 	}
+
+	public List<Product> selectProductLike(String likeName){
+		List<Product> products = new LinkedList<Product>();
+		try {
+			ResultSet result = stat.executeQuery(
+					"SELECT * FROM Product WHERE ProductName LIKE '%" + likeName +"%';");
+			int productId, productTax;
+			String productName;
+			double productPrice;
+			while(result.next()) {
+				productId = result.getInt("productId");
+				productName = result.getString("productName");
+				productPrice = result.getDouble("productPrice");
+				productTax = result.getInt("productTax");
+				products.add(new Product(productId, productName,
+										productPrice, productTax)); 
+			}
+		}catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, "Error while selecting from products");
+			e.printStackTrace();
+			return null;
+		}
+		return products;
+	}
+	
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	//---Orders insert update delete select---------------------------
+	//----------------------------------------------------------------	
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	public boolean insertOrders(int customerId, String orderDate, String invoiceDate,
+						double orderTotal) {
+		try {PreparedStatement prepStmt = con.prepareStatement(
+				"INSERT INTO Orders VALUES(NULL,? ,? ,?, ?);");
+			prepStmt.setInt(1, customerId);
+			prepStmt.setString(2, orderDate);
+			prepStmt.setString(3, invoiceDate);
+			prepStmt.setDouble(4, orderTotal);
+			prepStmt.execute();
+		}catch(SQLException e) {
+			//System.err.println("Error with inserting Orders");
+			JOptionPane.showMessageDialog(null, "Error with inserting Orders");
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+
+
 	public List<Orders> selectOrders(){
 		List<Orders> orders_list = new LinkedList<Orders>();
 		try {
@@ -270,6 +384,37 @@ public class Invoice {
 		}
 		return orders_list;
 	}
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	//---Orders_Details insert update delete select-------------------
+	//----------------------------------------------------------------	
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	
+	
+	public boolean insertOrders_Details(int orderId, int itemNumber, int productId,
+						double purchasePrice, int itemQuantity, double itemTotal) {
+		try {
+			PreparedStatement prepStmt = con.prepareStatement(
+					"INSERT INTO Orders_Details VALUES(?, ?, ?, ?, ?, ?);");
+			prepStmt.setInt(1, orderId);
+			prepStmt.setInt(2, itemNumber);
+			prepStmt.setInt(3, productId);
+			prepStmt.setDouble(4, purchasePrice);   
+			prepStmt.setInt(5, itemQuantity);
+			prepStmt.setDouble(6, itemTotal);
+			prepStmt.execute();
+		}catch(SQLException e){
+			//System.err.println("Error with inserting Orders_Details");
+			JOptionPane.showMessageDialog(null, "Error with inserting Orders_Details");
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+
 	public List<Orders_Details> selectOrders_Details(){
 		List<Orders_Details> orders_details_list = new LinkedList<Orders_Details>();
 		try {
@@ -293,6 +438,15 @@ public class Invoice {
 		}
 		return orders_details_list;
 	}
+	
+	//----------------------------------------------------------------	
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	//-------Closing connection---------------------------------------
+	//----------------------------------------------------------------	
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
 	
 	public void closeConnection() {
 		try {

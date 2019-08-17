@@ -10,7 +10,8 @@ import view.*;
 
 public class JDBCTest {
 	public static void main(String[] args) {
-		CustomerSearch custPane = new CustomerSearch();
+		//CustomerSearch custPane = new CustomerSearch();
+		ProductSearch prodPane = new ProductSearch();
 		Invoice i = new Invoice();
 		
 		i.insertCustomer("Stokrotka Sp.z o.o.", "Marsza³kowska 123/12",
@@ -24,7 +25,7 @@ public class JDBCTest {
 		for(Customer c : customersi)
 			System.out.println(c);
 		
-		i.insertProduct("Adidas shoe size 43qwerqwer",199.99, 12);
+		i.insertProduct("Adidas shoe size 43",199.99, 12);
 		i.insertProduct("Lamp",19.59, 12);
 		i.insertProduct("Rounded table, color white",259.99, 22);
 		

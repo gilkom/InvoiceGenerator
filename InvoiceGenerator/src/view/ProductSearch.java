@@ -8,13 +8,12 @@ import control.Control;
 import java.awt.*;
 import java.awt.event.*;
 
-
-public class CustomerSearch {
+public class ProductSearch {
 	JTable table;
 	
 	
-	public CustomerSearch(){
-		JFrame f = new JFrame("Customer search");
+	public ProductSearch(){
+		JFrame f = new JFrame("Product search");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setLayout(new BorderLayout(5,5));
 		
@@ -40,59 +39,24 @@ public class CustomerSearch {
 		RightButPan.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 
 		
-//Button "Add" opens AddingCustomer panel in which we can add new customer
+//Button "Add" opens AddingProduct panel in which we can add new product
 		JButton add = new JButton("Add");
 		add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new AddingCustomer(table,f);
+				new AddingProduct(table,f);
 				
-				table.setModel(Control.populateCustomer());
+				table.setModel(Control.populateProduct());
 				
 				//setting table size
 				table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 				table.getColumnModel().getColumn(0).setPreferredWidth(40);
-				table.getColumnModel().getColumn(1).setPreferredWidth(300);
-				table.getColumnModel().getColumn(2).setPreferredWidth(119);
-				table.getColumnModel().getColumn(3).setPreferredWidth(100);
-				table.getColumnModel().getColumn(4).setPreferredWidth(60);
-				table.getColumnModel().getColumn(5).setPreferredWidth(80);
+				table.getColumnModel().getColumn(1).setPreferredWidth(500);
+				table.getColumnModel().getColumn(2).setPreferredWidth(110);
+				table.getColumnModel().getColumn(3).setPreferredWidth(50);
 			}
 		});
 		
-		
-// Button deletes selected row
-		JButton delete = new JButton("Delete");
-		delete.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				try {
-				//getting id and name of selected row					
-				int deletingCustId = Integer.parseInt(	
-					table.getValueAt(table.getSelectedRow(), 0).toString());
-				String deletingCustName = table.getValueAt(table.getSelectedRow(), 1).toString();
-				
-				int conf = JOptionPane.showConfirmDialog(
-						null,"Are you sure you want to delete customer \n" + deletingCustName + "?",
-						"Confirm deleting", JOptionPane.YES_NO_OPTION);
-				if(conf == JOptionPane.YES_OPTION) {
-					//deleting selected row	and setting table without that row					
-					Control.removeCustomer(deletingCustId);
-					table.setModel(Control.populateCustomer());
-				
-					table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-					table.getColumnModel().getColumn(0).setPreferredWidth(40);
-					table.getColumnModel().getColumn(1).setPreferredWidth(300);
-					table.getColumnModel().getColumn(2).setPreferredWidth(119);
-					table.getColumnModel().getColumn(3).setPreferredWidth(100);
-					table.getColumnModel().getColumn(4).setPreferredWidth(60);
-					table.getColumnModel().getColumn(5).setPreferredWidth(80);
-				}
-				}catch(ArrayIndexOutOfBoundsException a) {
-					JOptionPane.showMessageDialog(null,  "Select row to delete!");
-				}
-			}
-		});
-		
+	
 		// Button which edits selected row
 		JButton edit = new JButton("Edit");
 		edit.addActionListener(new ActionListener() {
@@ -101,25 +65,23 @@ public class CustomerSearch {
 				try {
 					//getting id and name of selected row					
 					int rowIndex = table.getSelectedRow();
-					new EditingCustomer(table, f, rowIndex);
+					new EditingProduct(table, f, rowIndex);
 					
-					table.setModel(Control.populateCustomer());
+					//table.setModel(Control.populateProduct());
 					
 					//setting table size
 					table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 					table.getColumnModel().getColumn(0).setPreferredWidth(40);
-					table.getColumnModel().getColumn(1).setPreferredWidth(300);
-					table.getColumnModel().getColumn(2).setPreferredWidth(119);
-					table.getColumnModel().getColumn(3).setPreferredWidth(100);
-					table.getColumnModel().getColumn(4).setPreferredWidth(60);
-					table.getColumnModel().getColumn(5).setPreferredWidth(80);
+					table.getColumnModel().getColumn(1).setPreferredWidth(500);
+					table.getColumnModel().getColumn(2).setPreferredWidth(110);
+					table.getColumnModel().getColumn(3).setPreferredWidth(50);
 					
 				}catch(ArrayIndexOutOfBoundsException a) {
 					JOptionPane.showMessageDialog(null,  "Select row to edit!");
 				}
 			}
 		});
-		//Accept button not ready yet. select customer to invoice
+		//Accept button not ready yet. select product to invoice
 		JButton accept = new JButton("Accept");
 		
 		//searching for name like %x%
@@ -129,41 +91,69 @@ public class CustomerSearch {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String searchValue = searchField.getText();
-				table.setModel(Control.populateCustomerLike(searchValue));
+				table.setModel(Control.populateProductLike(searchValue));
 				
 				//setting table size
 				table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 				table.getColumnModel().getColumn(0).setPreferredWidth(40);
-				table.getColumnModel().getColumn(1).setPreferredWidth(300);
-				table.getColumnModel().getColumn(2).setPreferredWidth(119);
-				table.getColumnModel().getColumn(3).setPreferredWidth(100);
-				table.getColumnModel().getColumn(4).setPreferredWidth(60);
-				table.getColumnModel().getColumn(5).setPreferredWidth(80);	
+				table.getColumnModel().getColumn(1).setPreferredWidth(500);
+				table.getColumnModel().getColumn(2).setPreferredWidth(110);
+				table.getColumnModel().getColumn(3).setPreferredWidth(50);
 			}
 		};
 		
 		searchField.addActionListener(searchAction);
 		search.addActionListener(searchAction);
 		
+	
+// Button deletes selected row
+		JButton delete = new JButton("Delete");
+		delete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 
+				try {
+				//getting id and name of selected row					
+				int deletingProdId = Integer.parseInt(	
+					table.getValueAt(table.getSelectedRow(), 0).toString());
+				String deletingProdName = table.getValueAt(table.getSelectedRow(), 1).toString();
+				
+				int conf = JOptionPane.showConfirmDialog(
+						null,"Are you sure you want to delete product \n" + deletingProdName + "?",
+						"Confirm deleting", JOptionPane.YES_NO_OPTION);
+				if(conf == JOptionPane.YES_OPTION) {
+					//deleting selected row	and setting table without that row					
+					Control.removeProduct(deletingProdId);
+					String searchValue = searchField.getText();
+					table.setModel(Control.populateProductLike(searchValue));
+					
+					table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+					table.getColumnModel().getColumn(0).setPreferredWidth(40);
+					table.getColumnModel().getColumn(1).setPreferredWidth(500);
+					table.getColumnModel().getColumn(2).setPreferredWidth(110);
+					table.getColumnModel().getColumn(3).setPreferredWidth(50);
+				}
+				}catch(ArrayIndexOutOfBoundsException a) {
+					JOptionPane.showMessageDialog(null,  "Select row to delete!");
+				}
+			}
+		});
+		
 		
 		
 		JPanel TabPan = new JPanel();
 		TabPan.setLayout(new BorderLayout());
 		
 		
-		table = new JTable(Control.populateCustomer());
+		table = new JTable(Control.populateProduct());
 		table.setDefaultEditor(Object.class, null);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.getColumnModel().getColumn(0).setPreferredWidth(40);
-		table.getColumnModel().getColumn(1).setPreferredWidth(300);
-		table.getColumnModel().getColumn(2).setPreferredWidth(119);
-		table.getColumnModel().getColumn(3).setPreferredWidth(100);
-		table.getColumnModel().getColumn(4).setPreferredWidth(60);
-		table.getColumnModel().getColumn(5).setPreferredWidth(80);
+		table.getColumnModel().getColumn(1).setPreferredWidth(500);
+		table.getColumnModel().getColumn(2).setPreferredWidth(110);
+		table.getColumnModel().getColumn(3).setPreferredWidth(50);
 
 		
 		JScrollPane scr = new JScrollPane(table,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,

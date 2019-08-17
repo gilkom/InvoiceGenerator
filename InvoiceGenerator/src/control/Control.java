@@ -6,9 +6,20 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import invoice.*;
-import model.Customer;
+import model.*;
 
 public class Control {
+	
+	
+	//----------------------------------------------------------------	
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	//-------Customer database-JTable---------------------------------
+	//----------------------------------------------------------------	
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	
 	public static void addCustomer(String customerName, String customerStreet,
 			String customerCity, String customerPostCode, String customerNip)
 	{
@@ -39,6 +50,76 @@ public class Control {
 		for(Customer c : customers) {
 			model.addRow(new Object[] {c.getCustomerId(),c.getCustomerName(), c.getCustomerStreet(),
 			c.getCustomerCity(), c.getCustomerPostCode(), c.getCustomerNip()});
+		}
+		
+		return model;
+	}
+	public static DefaultTableModel populateCustomerLike(String likeName) {
+		Invoice i = new Invoice();
+		List<Customer> customers = i.selectCustomerLike(likeName);
+		
+		DefaultTableModel model = new DefaultTableModel(new String[] {
+				"Id", "Name", "Street", "City", "Post code", "Nip"},0);
+		
+		for(Customer c : customers) {
+			model.addRow(new Object[] {c.getCustomerId(),c.getCustomerName(), c.getCustomerStreet(),
+			c.getCustomerCity(), c.getCustomerPostCode(), c.getCustomerNip()});
+		}
+		
+		return model;
+	}
+	
+	//----------------------------------------------------------------	
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+	//-------Product database-JTable---------------------------------
+	//----------------------------------------------------------------	
+	//----------------------------------------------------------------
+	//----------------------------------------------------------------
+
+	public static void addProduct(String productName, double productPrice,int productTax)
+	{
+		Invoice i = new Invoice();
+		i.insertProduct(productName, productPrice, productTax);
+	}
+	
+	public static void removeProduct(int productId) {
+		Invoice i = new Invoice();
+		i.deleteProduct(productId);
+	}
+	
+	public static void updProduct(int productId, String productName,
+									double productPrice,int productTax)
+	{
+		Invoice i = new Invoice();
+		i.updateProduct(productId, productName, productPrice, productTax);
+	}
+	
+	public static DefaultTableModel populateProduct() {
+		Invoice i = new Invoice();
+		List<Product> products = i.selectProduct();
+		
+		DefaultTableModel model = new DefaultTableModel(new String[] {
+				"Id", "Name", "Price", "Tax"},0);
+		
+		for(Product p : products) {
+			model.addRow(new Object[] {p.getProductId(),p.getProductName(),
+					p.getProductPrice(),p.getProductTax()});
+		}
+		
+		return model;
+	}
+	public static DefaultTableModel populateProductLike(String likeName) {
+		Invoice i = new Invoice();
+		List<Product> products = i.selectProductLike(likeName);
+		
+		DefaultTableModel model = new DefaultTableModel(new String[] {
+				"Id", "Name", "Price", "Tax"},0);
+		
+		for(Product p : products) {
+			model.addRow(new Object[] {p.getProductId(),p.getProductName(),
+					p.getProductPrice(),p.getProductTax()});
 		}
 		
 		return model;
