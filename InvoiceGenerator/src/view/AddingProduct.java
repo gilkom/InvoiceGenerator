@@ -13,12 +13,12 @@ import invoice.*;
 
 public class AddingProduct {
 	
-	public AddingProduct(JTable tab, JFrame fr) {
+	public AddingProduct(JTable tab, JDialog dialProd) {
 		
 		//JFrame f = new JFrame("New customer:");
 		
 		
-		JDialog dial =new JDialog(fr,"New product: ", JDialog.DEFAULT_MODALITY_TYPE);
+		JDialog dial =new JDialog(dialProd,"New product: ", JDialog.DEFAULT_MODALITY_TYPE);
 		dial.setLayout(new BorderLayout());
 		dial.setPreferredSize(new Dimension(600,180));
 		dial.setResizable(false);
@@ -50,13 +50,14 @@ public class AddingProduct {
 		accept.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				try {
 				//message returns the String with error message when some of the fields are not right
 				DataMatcher d = new DataMatcher();
 				double priceF = Double.valueOf(priceField.getText());
 				int taxF = Integer.valueOf(taxField.getText());
 				
-				String message = d.prodPattern(nameField.getText(), priceF,taxF);
+				String message = d.prodPattern(nameField.getText(),
+						priceField.getText(),taxField.getText());
 				
 					//adding customer if there is no error message or open JOptionPane with error		
 				if(message.matches("ok")) {
@@ -79,7 +80,9 @@ public class AddingProduct {
 				}else {
 					JOptionPane.showMessageDialog(null, message);
 				}
-				
+			}catch(NumberFormatException a) {
+				JOptionPane.showMessageDialog(null,  "All fields have to be filled!");
+			}
 			}
 		});
 		

@@ -333,7 +333,29 @@ public class Invoice {
 		}
 		return products;
 	}
-	
+	public List<Product> selectProductLikeId(int rowIndex){
+		List<Product> products = new LinkedList<Product>();
+		try {
+			ResultSet result = stat.executeQuery(
+					"SELECT * FROM Product WHERE ProductId =" + rowIndex +";");
+			int productId, productTax;
+			String productName;
+			double productPrice;
+			while(result.next()) {
+				productId = result.getInt("productId");
+				productName = result.getString("productName");
+				productPrice = result.getDouble("productPrice");
+				productTax = result.getInt("productTax");
+				products.add(new Product(productId, productName,
+										productPrice, productTax)); 
+			}
+		}catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, "Error while selecting from products");
+			e.printStackTrace();
+			return null;
+		}
+		return products;
+	}
 	//----------------------------------------------------------------
 	//----------------------------------------------------------------
 	//----------------------------------------------------------------

@@ -19,14 +19,14 @@ public class DataMatcher {
 		
 		return result;
 			}
-	public String prodPattern(String productName, double productPrice, int productTax) {
+	public String prodPattern(String productName, String productPrice, String productTax) {
 		
 		String result = "ok";
-		String prodPr = Double.toString(productPrice);
-		String prodTx = Integer.toString(productTax);
+		//String prodPr = Double.toString(productPrice);
+		//String prodTx = Integer.toString(productTax);
 		
-		if (!prodTx.matches("\\d\\d")) {result = "Wrong tax! 2 digits! Right pattern: XX";};
-		if (!prodPr.matches("\\d+.\\d\\d")) {result = "Wrong price! Right pattern: X.XX";};
+		if (!productTax.matches("\\d\\d")) {result = "Wrong tax! 2 digits! Right pattern: XX";};
+		if (!productPrice.matches("\\d+.\\d\\d")) {result = "Wrong price! Right pattern: X.XX";};
 		if (!productName.matches(".+")) {result = "Wrong product name!";};
 		
 		

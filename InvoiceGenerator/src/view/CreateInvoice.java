@@ -2,10 +2,16 @@ package view;
 
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.table.DefaultTableModel;
+
+import control.Control;
 
 
 public class CreateInvoice {
@@ -38,7 +44,7 @@ public class CreateInvoice {
 	private JLabel orderDateLabel;
 	private JLabel totalLabel;
 	private JTable items;
-	
+	private JScrollPane scr;
 	
 	public CreateInvoice() {
 		frame = new JFrame();
@@ -61,7 +67,7 @@ public class CreateInvoice {
 		details.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 		detailsNorth = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		detailsNorth.setBorder(BorderFactory.createEtchedBorder());
-		detailsCenter = new JPanel();
+		detailsCenter = new JPanel(new GridLayout());
 		detailsCenter.setBorder(BorderFactory.createEtchedBorder());
 		detailsSouth = new JPanel();
 		detailsSouth.setBorder(BorderFactory.createEtchedBorder());
@@ -79,7 +85,6 @@ public class CreateInvoice {
 		invoiceDateLabel = new JLabel("Invoice date:");
 		invoiceDateLabel.setBorder(BorderFactory.createEmptyBorder(0, 350, 0, 0));
 		addProduct = new JButton("Add product");
-		items = new JTable(20,9);
 		orderDateLabel = new JLabel("Order date:");
 		orderDateField = new JTextField(10);
 		totalLabel = new JLabel("Total:");
@@ -89,6 +94,43 @@ public class CreateInvoice {
 		delete = new JButton("Delete");
 		print = new JButton("Print");
 		edit = new JButton("Edit");
+		
+		addProduct.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ProductSearch prodPane = new ProductSearch(items, frame);
+				
+			}
+		});
+		
+		
+		
+		
+		//create empty table model
+		DefaultTableModel model = new DefaultTableModel(new String[] {
+				"Item", "Product", "Qty",
+				"Net price", "Total net", "Tax rate(%)",
+				"Tax amount","Total gross"},0);
+		
+		//items = new JTable(Control.populateOrders_Details());
+		items = new JTable(model);
+		items.setDefaultEditor(Object.class, null);
+		items.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		items.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		items.getColumnModel().getColumn(0).setPreferredWidth(30);
+		items.getColumnModel().getColumn(1).setPreferredWidth(250);
+		items.getColumnModel().getColumn(2).setPreferredWidth(80);
+		items.getColumnModel().getColumn(3).setPreferredWidth(80);
+		items.getColumnModel().getColumn(4).setPreferredWidth(80);
+		items.getColumnModel().getColumn(5).setPreferredWidth(80);
+		items.getColumnModel().getColumn(6).setPreferredWidth(80);
+		items.getColumnModel().getColumn(7).setPreferredWidth(80);
+		
+		scr = new JScrollPane(items, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+									JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		
 		
 		header.add(headerUp, BorderLayout.NORTH);
 		header.add(headerLow, BorderLayout.SOUTH);		
@@ -104,7 +146,7 @@ public class CreateInvoice {
 		details.add(detailsCenter, BorderLayout.CENTER);
 		details.add(detailsSouth, BorderLayout.SOUTH);
 		detailsNorth.add(addProduct, BorderLayout.NORTH);
-		detailsCenter.add(items, BorderLayout.CENTER);
+		detailsCenter.add(scr);
 		detailsSouth.add(orderDateLabel, BorderLayout.SOUTH);
 		detailsSouth.add(orderDateField, BorderLayout.SOUTH);
 		detailsSouth.add(totalLabel, BorderLayout.SOUTH);

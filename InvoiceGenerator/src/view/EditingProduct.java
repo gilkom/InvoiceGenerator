@@ -12,9 +12,9 @@ import invoice.*;
 import model.*;
 
 public class EditingProduct {
-	public EditingProduct(JTable tab, JFrame fr, int rowIndex) {
+	public EditingProduct(JTable tab, JDialog dialProd, int rowIndex) {
 		
-		JDialog dial = new JDialog(fr, "Edit product: ", JDialog.DEFAULT_MODALITY_TYPE);
+		JDialog dial = new JDialog(dialProd, "Edit product: ", JDialog.DEFAULT_MODALITY_TYPE);
 		dial.setLayout(new BorderLayout());
 		dial.setPreferredSize(new Dimension(600,200));;
 		dial.setResizable(false);
@@ -51,13 +51,15 @@ public class EditingProduct {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//selecting productId
+				try {
 				int prodEdId = Integer.parseInt(tab.getValueAt((rowIndex),0).toString());
 				//message returns the String with error message when some of the fields has not right pattern
 				DataMatcher d = new DataMatcher();
 				double priceF = Double.valueOf(priceField.getText());
 				int taxF = Integer.valueOf(taxField.getText());
 				
-				String message = d.prodPattern(nameField.getText(), priceF,taxF);
+				String message = d.prodPattern(nameField.getText(),
+						priceField.getText(),taxField.getText());
 						
 			//adding product if there is no error message or open JOptionPane with error message		
 				if(message.matches("ok")) {
@@ -79,7 +81,9 @@ public class EditingProduct {
 				}else {
 					JOptionPane.showMessageDialog(null, message);
 				}
-						
+			}catch(NumberFormatException a) {
+				JOptionPane.showMessageDialog(null,  "All fields have to be filled!");
+			}	
 			}
 		});
 		

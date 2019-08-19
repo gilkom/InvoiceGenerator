@@ -12,10 +12,19 @@ public class ProductSearch {
 	JTable table;
 	
 	
-	public ProductSearch(){
-		JFrame f = new JFrame("Product search");
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setLayout(new BorderLayout(5,5));
+	public ProductSearch(JTable items, JFrame frame){
+		//JFrame f = new JFrame("Product search");
+		//f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		//f.setLayout(new BorderLayout(5,5));
+		
+		JDialog dialProd = new JDialog(
+				frame, "Product search:", JDialog.DEFAULT_MODALITY_TYPE);
+		dialProd.setLayout(new BorderLayout(5,5));
+		dialProd.setPreferredSize(new Dimension(800,600));
+		dialProd.setResizable(false);
+		dialProd.setLocation(100,100);
+		dialProd.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		
 		
 		JPanel EastPan = new JPanel();
 		EastPan.setPreferredSize(new Dimension(30,10));
@@ -43,7 +52,8 @@ public class ProductSearch {
 		JButton add = new JButton("Add");
 		add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new AddingProduct(table,f);
+				//new AddingProduct(table,f);
+				new AddingProduct(table,dialProd);
 				
 				table.setModel(Control.populateProduct());
 				
@@ -65,7 +75,7 @@ public class ProductSearch {
 				try {
 					//getting id and name of selected row					
 					int rowIndex = table.getSelectedRow();
-					new EditingProduct(table, f, rowIndex);
+					new EditingProduct(table, dialProd, rowIndex);
 					
 					//table.setModel(Control.populateProduct());
 					
@@ -81,9 +91,7 @@ public class ProductSearch {
 				}
 			}
 		});
-		//Accept button not ready yet. select product to invoice
-		JButton accept = new JButton("Accept");
-		
+
 		//searching for name like %x%
 		JTextField searchField = new JTextField(15);		
 		JButton search = new JButton("Search");
@@ -138,6 +146,24 @@ public class ProductSearch {
 			}
 		});
 		
+		//Accept button not ready yet. select product to invoice
+		JButton accept = new JButton("Accept");
+		accept.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			try {
+				int rowIndex = table.getSelectedRow();
+				
+				//trzeba dokoñczyc. wyswietla siê pozycja ale nie tak jak trzeba
+				
+				Control.populateOrders_Details(items, rowIndex);
+			}catch(ArrayIndexOutOfBoundsException a) {
+				JOptionPane.showMessageDialog(null,  "Select product!");
+			}
+			}
+		});
+		
 		
 		
 		JPanel TabPan = new JPanel();
@@ -171,19 +197,19 @@ public class ProductSearch {
 		
 		ButPan.add(LeftOuterButPan);
 		ButPan.add(RightOuterButPan);
-		f.add(ButPan, BorderLayout.NORTH);
-		f.add(TabPan, BorderLayout.CENTER);
-		f.add(WestPan, BorderLayout.WEST);
-		f.add(SouthPan, BorderLayout.SOUTH);
-		f.add(EastPan, BorderLayout.EAST);
+		dialProd.add(ButPan, BorderLayout.NORTH);
+		dialProd.add(TabPan, BorderLayout.CENTER);
+		dialProd.add(WestPan, BorderLayout.WEST);
+		dialProd.add(SouthPan, BorderLayout.SOUTH);
+		dialProd.add(EastPan, BorderLayout.EAST);
 		
 
 		SwingUtilities.invokeLater(new Runnable(){
 			public void run() {
-			f.pack();
-			f.setVisible(true);
-			f.setSize(800,600);
-			f.setResizable(false);
+			dialProd.pack();
+			dialProd.setVisible(true);
+			//f.setSize(800,600);
+			//f.setResizable(false);
 			}
 		});
 	}
