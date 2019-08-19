@@ -139,16 +139,10 @@ public class Control {
 	
 	public static void populateOrders_Details(JTable items, int rowIndex) {
 		Invoice i = new Invoice();
-		List<Product> products = i.selectProductLikeId(rowIndex+1);
-		
-		/*DefaultTableModel model = new DefaultTableModel(new String[] {
-					"Item", "Product", "Qty",
-					"Net price", "Total net", "Tax rate(%)",
-					"Tax amount","Total gross"},0);
-		*/
+		List<Product> products = i.selectProductLikeId(rowIndex);
+
 		DefaultTableModel model = (DefaultTableModel) items.getModel();
 
-		//dokoñczyæ bo nie wszystko dziala
 		int itemNo = 0; 
 		int quantity = 1;
 		double totalNet = 0;

@@ -153,9 +153,9 @@ public class ProductSearch {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 			try {
-				int rowIndex = table.getSelectedRow();
 				
-				//trzeba dokoñczyc. wyswietla siê pozycja ale nie tak jak trzeba
+				int rowIndex = Integer.parseInt(	
+						table.getValueAt(table.getSelectedRow(), 0).toString());
 				
 				Control.populateOrders_Details(items, rowIndex);
 			}catch(ArrayIndexOutOfBoundsException a) {
