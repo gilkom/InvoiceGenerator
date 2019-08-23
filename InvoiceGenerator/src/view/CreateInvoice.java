@@ -9,7 +9,11 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
 
 import control.Control;
 
@@ -30,6 +34,8 @@ public class CreateInvoice {
 	private JButton selectInvoice;
 	private JButton addCustomer;
 	private JButton addProduct;
+	private JButton removeProduct;
+	private JButton editProduct;
 	private JButton save;
 	private JButton savePrint;
 	private JButton delete;
@@ -85,6 +91,8 @@ public class CreateInvoice {
 		invoiceDateLabel = new JLabel("Invoice date:");
 		invoiceDateLabel.setBorder(BorderFactory.createEmptyBorder(0, 350, 0, 0));
 		addProduct = new JButton("Add product");
+		editProduct = new JButton("Edit product");
+		removeProduct = new JButton("Remove product");
 		orderDateLabel = new JLabel("Order date:");
 		orderDateField = new JTextField(10);
 		totalLabel = new JLabel("Total:");
@@ -99,11 +107,24 @@ public class CreateInvoice {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ProductSearch prodPane = new ProductSearch(items, frame);
+				new ProductSearch(items, frame);
 				
 			}
 		});
-		
+		editProduct.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					//getting id and name of selected row					
+					int rowIndex = items.getSelectedRow();
+					int columnIndex = items.getSelectedColumn();
+					new EditingItem(items,frame, rowIndex, columnIndex);
+				}catch(ArrayIndexOutOfBoundsException a) {
+					JOptionPane.showMessageDialog(null,  "Select row to edit!");
+			}
+			}
+		});
 		
 		
 		
@@ -111,11 +132,18 @@ public class CreateInvoice {
 		DefaultTableModel model = new DefaultTableModel(new String[] {
 				"Item", "Product", "Qty",
 				"Net price", "Total net", "Tax rate(%)",
-				"Tax amount","Total gross"},0);
-		
+				"Tax amount","Total gross"},0) {
+			boolean[] canEdit = new boolean[] {
+					false,false,false,false,false, false,false,false};
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+			return canEdit[columnIndex];
+			}
+		};
+
 		//items = new JTable(Control.populateOrders_Details());
 		items = new JTable(model);
-		items.setDefaultEditor(Object.class, null);
+
+		//items.setDefaultEditor(Object.class, null);
 		items.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		items.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -145,7 +173,9 @@ public class CreateInvoice {
 		details.add(detailsNorth, BorderLayout.NORTH);
 		details.add(detailsCenter, BorderLayout.CENTER);
 		details.add(detailsSouth, BorderLayout.SOUTH);
-		detailsNorth.add(addProduct, BorderLayout.NORTH);
+		detailsNorth.add(addProduct);
+		detailsNorth.add(editProduct);
+		detailsNorth.add(removeProduct);
 		detailsCenter.add(scr);
 		detailsSouth.add(orderDateLabel, BorderLayout.SOUTH);
 		detailsSouth.add(orderDateField, BorderLayout.SOUTH);

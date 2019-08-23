@@ -26,8 +26,21 @@ public class DataMatcher {
 		//String prodTx = Integer.toString(productTax);
 		
 		if (!productTax.matches("\\d\\d")) {result = "Wrong tax! 2 digits! Right pattern: XX";};
-		if (!productPrice.matches("\\d+.\\d\\d")) {result = "Wrong price! Right pattern: X.XX";};
+		if (!productPrice.matches("\\d+[.]\\d\\d")) {result = "Wrong price! Right pattern: X.XX";};
 		if (!productName.matches(".+")) {result = "Wrong product name!";};
+		
+		
+		return result;
+		}
+	public String itemPattern(String productQuantity, String productPrice, String productTax) {
+		
+		String result = "ok";
+		//String prodPr = Double.toString(productPrice);
+		//String prodTx = Integer.toString(productTax);
+		
+		if (!productTax.matches("\\d\\d")) {result = "Wrong tax! 2 digits! Right pattern: XX";};
+		if (!productPrice.matches("\\d+[.]\\d\\d")) {result = "Wrong price! Right pattern: X.XX";};
+		if (!productQuantity.matches("\\d+")) {result = "Wrong product quantity!";};
 		
 		
 		return result;

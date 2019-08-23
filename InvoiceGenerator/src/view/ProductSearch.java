@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import control.Control;
 
@@ -151,15 +152,28 @@ public class ProductSearch {
 		accept.addActionListener(new ActionListener() {
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent prode) {
 			try {
 				
 				int rowIndex = Integer.parseInt(	
 						table.getValueAt(table.getSelectedRow(), 0).toString());
 				
 				Control.populateOrders_Details(items, rowIndex);
+				
+				DefaultTableCellRenderer rend = new DefaultTableCellRenderer();
+				//Color grayed = new Color(255,0,0);
+				rend.setBackground(new Color(219,227,222));
+				items.getColumnModel().getColumn(0).setCellRenderer(rend);
+				items.getColumnModel().getColumn(1).setCellRenderer(rend);
+				items.getColumnModel().getColumn(2).setCellRenderer(rend);
+				items.getColumnModel().getColumn(3).setCellRenderer(rend);
+				items.getColumnModel().getColumn(4).setCellRenderer(rend);
+				items.getColumnModel().getColumn(5).setCellRenderer(rend);
+				items.getColumnModel().getColumn(6).setCellRenderer(rend);
+				items.getColumnModel().getColumn(7).setCellRenderer(rend);
+				
 			}catch(ArrayIndexOutOfBoundsException a) {
-				JOptionPane.showMessageDialog(null,  "Select product!");
+				JOptionPane.showMessageDialog(null,  "Select product to accept!");
 			}
 			}
 		});
