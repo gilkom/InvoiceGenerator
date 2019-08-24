@@ -224,6 +224,34 @@ public class Invoice {
 		}
 		return customers;
 	}
+	
+	public List<Customer> selectCustomerLikeId(int rowIndex){
+		List<Customer> customers = new LinkedList<Customer>();
+		try {
+			ResultSet result = stat.executeQuery(
+					"SELECT * FROM Customer WHERE CustomerId =" + rowIndex +";");
+			int customerId;
+			String customerName, customerStreet, customerCity,
+					customerPostCode, customerNip;
+			while(result.next()) {
+				customerId = result.getInt("customerId");
+				customerName = result.getString("customerName");
+				customerStreet = result.getString("customerStreet");
+				customerCity = result.getString("customerCity");
+				customerPostCode = result.getString("customerPostCode");
+				customerNip = result.getString("customerNip");
+				customers.add(new Customer(customerId, customerName,
+										customerStreet, customerCity, 
+										customerPostCode,customerNip));
+			}
+
+		}catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, "Error while selecting from customers");
+			e.printStackTrace();
+			return null;
+		}
+		return customers;
+	}
 	//----------------------------------------------------------------
 	//----------------------------------------------------------------
 	//----------------------------------------------------------------

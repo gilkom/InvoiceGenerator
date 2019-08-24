@@ -129,6 +129,13 @@ public class Control {
 		return model;
 	}
 	
+	public static String selectCustomer(int rowIndex) {
+		String result = "";
+		Invoice i = new Invoice();
+		List<Customer> customers = i.selectCustomerLikeId(rowIndex);
+		result = customers.toString();
+		return result;
+	}
 	//----------------------------------------------------------------	
 	//----------------------------------------------------------------
 	//----------------------------------------------------------------

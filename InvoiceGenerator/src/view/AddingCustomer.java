@@ -13,12 +13,12 @@ import invoice.*;
 
 public class AddingCustomer {
 	
-	public AddingCustomer(JTable tab, JFrame fr) {
+	public AddingCustomer(JTable tab, JDialog jd) {
 		
 		//JFrame f = new JFrame("New customer:");
 		
 		
-		JDialog dial =new JDialog(fr,"New customer: ", JDialog.DEFAULT_MODALITY_TYPE);
+		JDialog dial =new JDialog(jd,"New customer: ", JDialog.DEFAULT_MODALITY_TYPE);
 		dial.setLayout(new BorderLayout());
 		dial.setPreferredSize(new Dimension(600,200));
 		dial.setResizable(false);

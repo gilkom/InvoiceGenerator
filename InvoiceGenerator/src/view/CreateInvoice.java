@@ -4,6 +4,7 @@ package view;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Properties;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -15,6 +16,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 
+import org.jdatepicker.impl.*;
+
+import control.DateLabelFormatter;
 import control.Control;
 
 
@@ -41,8 +45,6 @@ public class CreateInvoice {
 	private JButton delete;
 	private JButton print;
 	private JButton edit;
-	private JTextField invoiceDateField;
-	private JTextField orderDateField;
 	private JTextField totalField;
 	private JTextArea customerData;
 	private JTextArea issuerData;
@@ -51,6 +53,12 @@ public class CreateInvoice {
 	private JLabel totalLabel;
 	private JTable items;
 	private JScrollPane scr;
+	private UtilDateModel invDateModel;
+	private JDatePanelImpl invDatePanel;
+	private JDatePickerImpl invDatePicker;
+	private UtilDateModel ordDateModel;
+	private JDatePanelImpl ordDatePanel;
+	private JDatePickerImpl ordDatePicker;
 	
 	public CreateInvoice() {
 		frame = new JFrame();
@@ -59,9 +67,7 @@ public class CreateInvoice {
 		
 		
 		header = new JPanel(new BorderLayout());
-		//header.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		header.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));	
-
 		headerUp = new JPanel(new FlowLayout(10,30,10));
 		headerUp.setBorder(BorderFactory.createEtchedBorder());
 		headerLow = new JPanel(new GridLayout());
@@ -75,7 +81,7 @@ public class CreateInvoice {
 		detailsNorth.setBorder(BorderFactory.createEtchedBorder());
 		detailsCenter = new JPanel(new GridLayout());
 		detailsCenter.setBorder(BorderFactory.createEtchedBorder());
-		detailsSouth = new JPanel();
+		detailsSouth = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		detailsSouth.setBorder(BorderFactory.createEtchedBorder());
 		footer = new JPanel();
 		footer.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
@@ -83,25 +89,53 @@ public class CreateInvoice {
 		selectInvoice = new JButton("Select invoice");
 		addCustomer = new JButton("Add customer");
 		addCustomer.setPreferredSize(new Dimension(120,15));
-		invoiceDateField = new JTextField(10);
 		customerData = new JTextArea();
 		customerData.setPreferredSize(new Dimension(350,50));
 		issuerData = new JTextArea(3,30);
 		issuerData.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		invoiceDateLabel = new JLabel("Invoice date:");
-		invoiceDateLabel.setBorder(BorderFactory.createEmptyBorder(0, 350, 0, 0));
+		invoiceDateLabel.setBorder(BorderFactory.createEmptyBorder(0, 280, 0, 0));
+		//Date picker for invoice date
+		invDateModel = new UtilDateModel();
+		invDateModel.setSelected(true);
+		Properties invDateProp = new Properties();
+		invDateProp.put("text.today", "Today");
+		invDateProp.put("text.month", "Month");
+		invDateProp.put("text.year", "Year");
+		invDatePanel = new JDatePanelImpl(invDateModel, invDateProp);
+		invDatePicker = new JDatePickerImpl(invDatePanel, new DateLabelFormatter());
+		
 		addProduct = new JButton("Add product");
 		editProduct = new JButton("Edit product");
 		removeProduct = new JButton("Remove product");
 		orderDateLabel = new JLabel("Order date:");
-		orderDateField = new JTextField(10);
+		//Date picker for invoice date
+				ordDateModel = new UtilDateModel();
+				//ordDateModel.setSelected(true);
+				Properties ordDateProp = new Properties();
+				ordDateProp.put("text.today", "Today");
+				ordDateProp.put("text.month", "Month");
+				ordDateProp.put("text.year", "Year");
+				ordDatePanel = new JDatePanelImpl(ordDateModel, ordDateProp);
+				ordDatePicker = new JDatePickerImpl(ordDatePanel, new DateLabelFormatter());
+				
 		totalLabel = new JLabel("Total:");
+		totalLabel.setBorder(BorderFactory.createEmptyBorder(0, 260, 0, 0));
 		totalField = new JTextField(15);
 		save = new JButton("Save");
 		savePrint = new JButton("Save print");
 		delete = new JButton("Delete");
 		print = new JButton("Print");
 		edit = new JButton("Edit");
+		
+		addCustomer.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new CustomerSearch(frame, customerData);
+				
+			}
+		});
 		
 		addProduct.addActionListener(new ActionListener() {
 			
@@ -164,7 +198,7 @@ public class CreateInvoice {
 		header.add(headerLow, BorderLayout.SOUTH);		
 		headerUp.add(selectInvoice);
 		headerUp.add(invoiceDateLabel);
-		headerUp.add(invoiceDateField);
+		headerUp.add(invDatePicker);
 		headerLow.add(headerLowLeft);
 		headerLow.add(headerLowRight);
 		headerLowLeft.add(issuerData);
@@ -178,7 +212,7 @@ public class CreateInvoice {
 		detailsNorth.add(removeProduct);
 		detailsCenter.add(scr);
 		detailsSouth.add(orderDateLabel, BorderLayout.SOUTH);
-		detailsSouth.add(orderDateField, BorderLayout.SOUTH);
+		detailsSouth.add(ordDatePicker, BorderLayout.SOUTH);
 		detailsSouth.add(totalLabel, BorderLayout.SOUTH);
 		detailsSouth.add(totalField, BorderLayout.SOUTH);
 		footer.add(save);

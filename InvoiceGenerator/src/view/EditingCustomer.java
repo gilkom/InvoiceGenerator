@@ -12,9 +12,9 @@ import invoice.*;
 import model.*;
 
 public class EditingCustomer {
-	public EditingCustomer(JTable tab, JFrame fr, int rowIndex) {
+	public EditingCustomer(JTable tab, JDialog jd, int rowIndex) {
 		
-		JDialog dial = new JDialog(fr, "Edit customer: ", JDialog.DEFAULT_MODALITY_TYPE);
+		JDialog dial = new JDialog(jd, "Edit customer: ", JDialog.DEFAULT_MODALITY_TYPE);
 		dial.setLayout(new BorderLayout());
 		dial.setPreferredSize(new Dimension(600,200));;
 		dial.setResizable(false);

@@ -13,10 +13,18 @@ public class CustomerSearch {
 	JTable table;
 	
 	
-	public CustomerSearch(){
-		JFrame f = new JFrame("Customer search");
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setLayout(new BorderLayout(5,5));
+	public CustomerSearch(JFrame frame, JTextArea customerData){
+		//JFrame f = new JFrame("Customer search");
+		//f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//f.setLayout(new BorderLayout(5,5));
+		
+		JDialog dialCust = new JDialog(
+				frame, "Customer search:",JDialog.DEFAULT_MODALITY_TYPE);
+		dialCust.setLayout(new BorderLayout(5,5));
+		dialCust.setPreferredSize(new Dimension(800,600));
+		dialCust.setResizable(false);
+		dialCust.setLocation(100,100);
+		dialCust.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		
 		JPanel EastPan = new JPanel();
 		EastPan.setPreferredSize(new Dimension(30,10));
@@ -44,7 +52,7 @@ public class CustomerSearch {
 		JButton add = new JButton("Add");
 		add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new AddingCustomer(table,f);
+				new AddingCustomer(table,dialCust);
 				
 				table.setModel(Control.populateCustomer());
 				
@@ -101,7 +109,7 @@ public class CustomerSearch {
 				try {
 					//getting id and name of selected row					
 					int rowIndex = table.getSelectedRow();
-					new EditingCustomer(table, f, rowIndex);
+					new EditingCustomer(table, dialCust, rowIndex);
 					
 					table.setModel(Control.populateCustomer());
 					
@@ -121,6 +129,30 @@ public class CustomerSearch {
 		});
 		//Accept button not ready yet. select customer to invoice
 		JButton accept = new JButton("Accept");
+		accept.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					int rowIndex = Integer.parseInt(
+							table.getValueAt(table.getSelectedRow(),0).toString());
+					// getting customer string and removing signs [ and ] from string
+					String res = Control.selectCustomer(rowIndex);
+					res = res.substring(1);
+					res = res.substring(0,res.length() - 1);
+					
+					customerData.setText(res);
+					dialCust.dispose();	
+				}catch(ArrayIndexOutOfBoundsException a) {
+					JOptionPane.showMessageDialog(null, "Select customer to accept!");
+				}
+
+			}
+		});
+		
+		
+		
+		
 		
 		//searching for name like %x%
 		JTextField searchField = new JTextField(15);		
@@ -181,19 +213,19 @@ public class CustomerSearch {
 		
 		ButPan.add(LeftOuterButPan);
 		ButPan.add(RightOuterButPan);
-		f.add(ButPan, BorderLayout.NORTH);
-		f.add(TabPan, BorderLayout.CENTER);
-		f.add(WestPan, BorderLayout.WEST);
-		f.add(SouthPan, BorderLayout.SOUTH);
-		f.add(EastPan, BorderLayout.EAST);
+		dialCust.add(ButPan, BorderLayout.NORTH);
+		dialCust.add(TabPan, BorderLayout.CENTER);
+		dialCust.add(WestPan, BorderLayout.WEST);
+		dialCust.add(SouthPan, BorderLayout.SOUTH);
+		dialCust.add(EastPan, BorderLayout.EAST);
 		
 
 		SwingUtilities.invokeLater(new Runnable(){
 			public void run() {
-			f.pack();
-			f.setVisible(true);
-			f.setSize(800,600);
-			f.setResizable(false);
+			dialCust.pack();
+			dialCust.setVisible(true);
+			//f.setSize(800,600);
+			//f.setResizable(false);
 			}
 		});
 	}
