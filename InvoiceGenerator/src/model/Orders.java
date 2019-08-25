@@ -1,5 +1,7 @@
 package model;
 
+import java.sql.Date;
+
 public class Orders {
 	private int orderId;
 	private int customerId;

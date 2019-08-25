@@ -12,7 +12,8 @@ import invoice.*;
 import model.*;
 
 public class EditingItem {
-	public EditingItem(JTable tab, JFrame invFrame, int rowIndex, int columnIndex) {
+	public EditingItem(JTable tab, JFrame invFrame, int rowIndex,
+							int columnIndex, JTextField totalField) {
 		
 		JDialog dial = new JDialog(invFrame, "Edit item: ", JDialog.DEFAULT_MODALITY_TYPE);
 		dial.setLayout(new BorderLayout());
@@ -81,6 +82,14 @@ public class EditingItem {
 							Double.parseDouble(priceField.getText()), 
 							Integer.parseInt(taxField.getText()));
 
+					//calculating and setting totalGross value
+					int rowCounter = tab.getRowCount();
+					double totalGross = 0;
+					for(int i =0; i < rowCounter; i++)
+						totalGross = totalGross + (Double)tab.getValueAt(i, 7);
+					
+					totalGross = Math.round(totalGross *100.0)/100.0;
+					totalField.setText(Double.toString(totalGross));
 					dial.dispose();
 				}else {
 					JOptionPane.showMessageDialog(null, message);

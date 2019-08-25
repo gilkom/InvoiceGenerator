@@ -4,7 +4,7 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
 import control.Control;
-
+import view.*;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -13,7 +13,8 @@ public class CustomerSearch {
 	JTable table;
 	
 	
-	public CustomerSearch(JFrame frame, JTextArea customerData){
+	public CustomerSearch(JFrame frame, JTextArea customerData, JTextArea customerId){
+
 		//JFrame f = new JFrame("Customer search");
 		//f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//f.setLayout(new BorderLayout(5,5));
@@ -127,31 +128,35 @@ public class CustomerSearch {
 				}
 			}
 		});
-		//Accept button not ready yet. select customer to invoice
+		
+		//Accept button  select customer to invoice
 		JButton accept = new JButton("Accept");
 		accept.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
 				try {
+
 					int rowIndex = Integer.parseInt(
 							table.getValueAt(table.getSelectedRow(),0).toString());
 					// getting customer string and removing signs [ and ] from string
 					String res = Control.selectCustomer(rowIndex);
 					res = res.substring(1);
 					res = res.substring(0,res.length() - 1);
-					
+					//customerId.setText("3");
+					customerId.setText(Integer.toString(rowIndex));
 					customerData.setText(res);
+
 					dialCust.dispose();	
 				}catch(ArrayIndexOutOfBoundsException a) {
 					JOptionPane.showMessageDialog(null, "Select customer to accept!");
 				}
+				catch(NullPointerException n) {
+					JOptionPane.showMessageDialog(null,  "NullPOinter..");
+				}
 
 			}
 		});
-		
-		
-		
 		
 		
 		//searching for name like %x%
@@ -219,7 +224,7 @@ public class CustomerSearch {
 		dialCust.add(SouthPan, BorderLayout.SOUTH);
 		dialCust.add(EastPan, BorderLayout.EAST);
 		
-
+		
 		SwingUtilities.invokeLater(new Runnable(){
 			public void run() {
 			dialCust.pack();

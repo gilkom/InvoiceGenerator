@@ -36,9 +36,9 @@ public class JDBCTest {
 		for(Product p : products)
 			System.out.println(p);
 		
-		i.insertOrders(2, "12-02-2019", "14-03-2019kj", 1243.12);
-		i.insertOrders(2, "11-01-2016", "21-02-2016", 924.52);
-		i.insertOrders(2, "01-12-2019", "27-12-2019", 34.67);
+		//i.insertOrders(2, "12-02-2019", "14-03-2019kj", 1243.12);
+		//i.insertOrders(2, "11-01-2016", "21-02-2016", 924.52);
+		//i.insertOrders(2, "01-12-2019", "27-12-2019", 34.67);
 		
 		List<Orders> orders_list = i.selectOrders();
 		System.out.println("List of orders");

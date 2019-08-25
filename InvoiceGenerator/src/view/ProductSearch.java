@@ -8,12 +8,13 @@ import control.Control;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
 
 public class ProductSearch {
 	JTable table;
 	
 	
-	public ProductSearch(JTable items, JFrame frame){
+	public ProductSearch(JTable items, JFrame frame, JTextField totalField, Map<Integer,Integer> mapId){
 		//JFrame f = new JFrame("Product search");
 		//f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		//f.setLayout(new BorderLayout(5,5));
@@ -64,6 +65,7 @@ public class ProductSearch {
 				table.getColumnModel().getColumn(1).setPreferredWidth(500);
 				table.getColumnModel().getColumn(2).setPreferredWidth(110);
 				table.getColumnModel().getColumn(3).setPreferredWidth(50);
+				
 			}
 		});
 		
@@ -87,6 +89,7 @@ public class ProductSearch {
 					table.getColumnModel().getColumn(2).setPreferredWidth(110);
 					table.getColumnModel().getColumn(3).setPreferredWidth(50);
 					
+				
 				}catch(ArrayIndexOutOfBoundsException a) {
 					JOptionPane.showMessageDialog(null,  "Select row to edit!");
 				}
@@ -140,6 +143,7 @@ public class ProductSearch {
 					table.getColumnModel().getColumn(1).setPreferredWidth(500);
 					table.getColumnModel().getColumn(2).setPreferredWidth(110);
 					table.getColumnModel().getColumn(3).setPreferredWidth(50);
+					
 				}
 				}catch(ArrayIndexOutOfBoundsException a) {
 					JOptionPane.showMessageDialog(null,  "Select row to delete!");
@@ -158,11 +162,11 @@ public class ProductSearch {
 				int rowIndex = Integer.parseInt(	
 						table.getValueAt(table.getSelectedRow(), 0).toString());
 				
-				Control.populateOrders_Details(items, rowIndex);
+				Control.populateOrders_Details(items, rowIndex, mapId);
 				
 				DefaultTableCellRenderer rend = new DefaultTableCellRenderer();
 				//Color grayed = new Color(255,0,0);
-				rend.setBackground(new Color(219,227,222));
+				rend.setBackground(new Color(242,242,242));
 				items.getColumnModel().getColumn(0).setCellRenderer(rend);
 				items.getColumnModel().getColumn(1).setCellRenderer(rend);
 				items.getColumnModel().getColumn(2).setCellRenderer(rend);
@@ -171,6 +175,16 @@ public class ProductSearch {
 				items.getColumnModel().getColumn(5).setCellRenderer(rend);
 				items.getColumnModel().getColumn(6).setCellRenderer(rend);
 				items.getColumnModel().getColumn(7).setCellRenderer(rend);
+				
+				
+				//calculating and setting totalGross value
+				int rowCounter = items.getRowCount();
+				double totalGross = 0;
+				for(int i =0; i < rowCounter; i++)
+					totalGross = totalGross + (Double)items.getValueAt(i, 7);
+				
+				totalGross = Math.round(totalGross *100.0)/100.0;
+				totalField.setText(Double.toString(totalGross));
 				
 			}catch(ArrayIndexOutOfBoundsException a) {
 				JOptionPane.showMessageDialog(null,  "Select product to accept!");

@@ -4,7 +4,9 @@ package view;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Properties;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -46,6 +48,7 @@ public class CreateInvoice {
 	private JButton print;
 	private JButton edit;
 	private JTextField totalField;
+	private JTextArea customerId;
 	private JTextArea customerData;
 	private JTextArea issuerData;
 	private JLabel invoiceDateLabel;
@@ -59,13 +62,18 @@ public class CreateInvoice {
 	private UtilDateModel ordDateModel;
 	private JDatePanelImpl ordDatePanel;
 	private JDatePickerImpl ordDatePicker;
+	private Map<Integer, Integer> mapId;
+	private DefaultTableModel model;
+	
+	private double totalGross;
 	
 	public CreateInvoice() {
+		//Main JFrame
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout(5, 10));
 		
-		
+		//-------JPanels-----------
 		header = new JPanel(new BorderLayout());
 		header.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));	
 		headerUp = new JPanel(new FlowLayout(10,30,10));
@@ -86,13 +94,21 @@ public class CreateInvoice {
 		footer = new JPanel();
 		footer.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 		
+		
+		//header JPanel(NORTH)
 		selectInvoice = new JButton("Select invoice");
 		addCustomer = new JButton("Add customer");
 		addCustomer.setPreferredSize(new Dimension(120,15));
 		customerData = new JTextArea();
+		customerData.setEditable(false);
+		customerData.setBackground(new Color(242,242,242));
 		customerData.setPreferredSize(new Dimension(350,50));
+		customerData.setBorder(BorderFactory.createLoweredBevelBorder());
+		customerId = new JTextArea();
 		issuerData = new JTextArea(3,30);
-		issuerData.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		issuerData.setEditable(false);
+		issuerData.setBackground(new Color(242,242,242));
+		issuerData.setBorder(BorderFactory.createLoweredBevelBorder());		
 		invoiceDateLabel = new JLabel("Invoice date:");
 		invoiceDateLabel.setBorder(BorderFactory.createEmptyBorder(0, 280, 0, 0));
 		//Date picker for invoice date
@@ -105,6 +121,7 @@ public class CreateInvoice {
 		invDatePanel = new JDatePanelImpl(invDateModel, invDateProp);
 		invDatePicker = new JDatePickerImpl(invDatePanel, new DateLabelFormatter());
 		
+		//details JPanel(CENTER)
 		addProduct = new JButton("Add product");
 		editProduct = new JButton("Edit product");
 		removeProduct = new JButton("Remove product");
@@ -122,29 +139,40 @@ public class CreateInvoice {
 		totalLabel = new JLabel("Total:");
 		totalLabel.setBorder(BorderFactory.createEmptyBorder(0, 260, 0, 0));
 		totalField = new JTextField(15);
+		totalField.setEditable(false);
+		totalField.setBackground(Color.white);
+
+		
+		//Footer JPanel (SOUTH)
 		save = new JButton("Save");
 		savePrint = new JButton("Save print");
 		delete = new JButton("Delete");
 		print = new JButton("Print");
 		edit = new JButton("Edit");
 		
+		
+		//Add customer button
 		addCustomer.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new CustomerSearch(frame, customerData);
+				CustomerSearch cuSearch = new CustomerSearch(frame, customerData, customerId);
+				//customerId = cuSearch.result;
 				
 			}
 		});
 		
+		//Add item button
 		addProduct.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new ProductSearch(items, frame);
+				new ProductSearch(items, frame, totalField, mapId);
 				
 			}
 		});
+		
+		//Edit item button
 		editProduct.addActionListener(new ActionListener() {
 			
 			@Override
@@ -153,31 +181,101 @@ public class CreateInvoice {
 					//getting id and name of selected row					
 					int rowIndex = items.getSelectedRow();
 					int columnIndex = items.getSelectedColumn();
-					new EditingItem(items,frame, rowIndex, columnIndex);
+					new EditingItem(items,frame, rowIndex, columnIndex,totalField);
+					
 				}catch(ArrayIndexOutOfBoundsException a) {
 					JOptionPane.showMessageDialog(null,  "Select row to edit!");
 			}
 			}
 		});
 		
+		//Deleting item button
+		removeProduct.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					int deletingProdId = Integer.parseInt(	
+							items.getValueAt(items.getSelectedRow(), 0).toString());
+					
+					int conf = JOptionPane.showConfirmDialog(
+							null,"Are you sure you want to delete product? \n",
+							"Confirm deleting", JOptionPane.YES_NO_OPTION);
+					if(conf == JOptionPane.YES_OPTION) {
+						Control.removeItem(items, deletingProdId, mapId);
+						
+						//calculating and setting totalGross value
+						int rowCounter = items.getRowCount();
+						totalGross = 0;
+						for(int i =0; i < rowCounter; i++)
+							totalGross = totalGross + (Double)items.getValueAt(i, 7);
+						
+						totalGross = Math.round(totalGross *100.0)/100.0;
+						totalField.setText(Double.toString(totalGross));
+						
+						
+					}
+				}catch(ArrayIndexOutOfBoundsException a) {
+					JOptionPane.showMessageDialog(null, "Select row to delete!");
+				}
+				
+			}
+		});
+		
+		//Save invoice button
+		save.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			try {
+				//converting date to string
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				
+				Control.addOrders(Integer.parseInt(customerId.getText()), sdf.format(ordDateModel.getValue()),
+											sdf.format(invDateModel.getValue()),
+											Double.parseDouble(totalField.getText()));
+				int lastId = Control.lastId;
+				Control.addOrders_Details(items, lastId, mapId);
+
+				
+				JOptionPane.showMessageDialog(null, "Invoice saved");
+				model.setRowCount(0);
+				totalGross = 0;
+				totalField.setText("");
+				customerId.setText("");
+				customerData.setText("");
+				ordDateModel.setSelected(false);
+				mapId.clear();
+			}catch(NumberFormatException a) {
+				JOptionPane.showMessageDialog(null,  "All fields have to be filled!");
+			}catch(NullPointerException an) {
+				JOptionPane.showMessageDialog(null,  "All fields have to be filled!");
+			}
+			}
+		});
 		
 		
 		//create empty table model
-		DefaultTableModel model = new DefaultTableModel(new String[] {
+		model = new DefaultTableModel(new String[] {
 				"Item", "Product", "Qty",
 				"Net price", "Total net", "Tax rate(%)",
 				"Tax amount","Total gross"},0) {
+
+			private static final long serialVersionUID = 1L;
 			boolean[] canEdit = new boolean[] {
 					false,false,false,false,false, false,false,false};
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
 			return canEdit[columnIndex];
 			}
 		};
-
-		//items = new JTable(Control.populateOrders_Details());
+		
+		
+		
+		// Creating table for items
 		items = new JTable(model);
+		mapId = new HashMap<Integer, Integer>();
+		System.out.println("map: "+mapId.get(1)+ ", map0: " +mapId.get(0));
 
-		//items.setDefaultEditor(Object.class, null);
 		items.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		items.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -194,6 +292,7 @@ public class CreateInvoice {
 									JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		
+		//--Adding elements to JPanels
 		header.add(headerUp, BorderLayout.NORTH);
 		header.add(headerLow, BorderLayout.SOUTH);		
 		headerUp.add(selectInvoice);
@@ -222,7 +321,7 @@ public class CreateInvoice {
 		footer.add(edit);
 		
 
-		
+		//adding jpanels to Jframe
 		frame.add(header,BorderLayout.NORTH);
 		frame.add(details, BorderLayout.CENTER);
 		frame.add(footer, BorderLayout.SOUTH);

@@ -6,6 +6,7 @@ public class Orders_Details {
 	private int productId;
 	private double purchasePrice;
 	private int itemQuantity;
+	private int itemTax;
 	private double itemTotal;
 	
 	public int getOrderId() {
@@ -38,6 +39,12 @@ public class Orders_Details {
 	public void setItemQuantity(int itemQuantity) {
 		this.itemQuantity = itemQuantity;
 	}
+	public int getItemTax() {
+		return itemTax;
+	}
+	public void setItemTax(int itemTax) {
+		this.itemTax = itemTax;
+	}
 	public double getItemTotal() {
 		return itemTotal;
 	}
@@ -47,12 +54,13 @@ public class Orders_Details {
 	
 	public Orders_Details() {};
 	public Orders_Details(int orderId, int itemNumber, int productId, double purchasePrice,
-							int itemQuantity, double itemTotal) {
+							int itemQuantity, int itemTax, double itemTotal) {
 		this.orderId = orderId;
 		this.itemNumber = itemNumber;
 		this.productId = productId;
 		this.purchasePrice = purchasePrice;
 		this.itemQuantity = itemQuantity;
+		this.itemTax = itemTax;
 		this.itemTotal = itemTotal;
 	}
 	
@@ -60,7 +68,7 @@ public class Orders_Details {
 	public String toString() {
 		return "Order[" + orderId + "], Item[" + itemNumber + "], product[" +
 				productId + "], Price: " + purchasePrice + ", quantity: " +
-				itemQuantity + ", Item total: " + itemTotal;
+				itemQuantity + ", tax: " + itemTax + ", Item total: " + itemTotal;
 	}
 	
 }
