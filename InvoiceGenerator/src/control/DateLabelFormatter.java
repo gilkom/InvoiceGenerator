@@ -2,14 +2,12 @@ package control;
 
 import java.text.ParseException;
 import java.text.*;
-
-import javax.swing.*;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import java.util.*;
 
 public class DateLabelFormatter extends AbstractFormatter {
-
-    private String datePattern = "yyyy-MM-dd";
+	private static final long serialVersionUID = 1L;
+	private String datePattern = "yyyy-MM-dd";
     private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
 
     @Override

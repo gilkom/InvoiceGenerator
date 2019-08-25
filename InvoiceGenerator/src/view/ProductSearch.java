@@ -15,9 +15,6 @@ public class ProductSearch {
 	
 	
 	public ProductSearch(JTable items, JFrame frame, JTextField totalField, Map<Integer,Integer> mapId){
-		//JFrame f = new JFrame("Product search");
-		//f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		//f.setLayout(new BorderLayout(5,5));
 		
 		JDialog dialProd = new JDialog(
 				frame, "Product search:", JDialog.DEFAULT_MODALITY_TYPE);
@@ -54,7 +51,6 @@ public class ProductSearch {
 		JButton add = new JButton("Add");
 		add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//new AddingProduct(table,f);
 				new AddingProduct(table,dialProd);
 				
 				table.setModel(Control.populateProduct());
@@ -80,8 +76,6 @@ public class ProductSearch {
 					int rowIndex = table.getSelectedRow();
 					new EditingProduct(table, dialProd, rowIndex);
 					
-					//table.setModel(Control.populateProduct());
-					
 					//setting table size
 					table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 					table.getColumnModel().getColumn(0).setPreferredWidth(40);
@@ -89,7 +83,6 @@ public class ProductSearch {
 					table.getColumnModel().getColumn(2).setPreferredWidth(110);
 					table.getColumnModel().getColumn(3).setPreferredWidth(50);
 					
-				
 				}catch(ArrayIndexOutOfBoundsException a) {
 					JOptionPane.showMessageDialog(null,  "Select row to edit!");
 				}
@@ -100,6 +93,7 @@ public class ProductSearch {
 		JTextField searchField = new JTextField(15);		
 		JButton search = new JButton("Search");
 		Action searchAction = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String searchValue = searchField.getText();
@@ -151,7 +145,7 @@ public class ProductSearch {
 			}
 		});
 		
-		//Accept button not ready yet. select product to invoice
+		//Accept button. selects product to invoice
 		JButton accept = new JButton("Accept");
 		accept.addActionListener(new ActionListener() {
 			
@@ -165,7 +159,6 @@ public class ProductSearch {
 				Control.populateOrders_Details(items, rowIndex, mapId);
 				
 				DefaultTableCellRenderer rend = new DefaultTableCellRenderer();
-				//Color grayed = new Color(255,0,0);
 				rend.setBackground(new Color(242,242,242));
 				items.getColumnModel().getColumn(0).setCellRenderer(rend);
 				items.getColumnModel().getColumn(1).setCellRenderer(rend);
@@ -236,8 +229,6 @@ public class ProductSearch {
 			public void run() {
 			dialProd.pack();
 			dialProd.setVisible(true);
-			//f.setSize(800,600);
-			//f.setResizable(false);
 			}
 		});
 	}

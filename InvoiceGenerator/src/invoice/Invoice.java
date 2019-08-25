@@ -2,8 +2,6 @@ package invoice;
   
 import java.sql.*;
 import java.util.*;
-//import java.sql.Date;
-import java.util.Date;
 
 import javax.swing.JOptionPane;
 
@@ -31,7 +29,6 @@ public class Invoice {
 		try {
 			Class.forName(Invoice.DRIVER);
 		}catch(ClassNotFoundException e) {
-			//System.err.println("No driver JDBC");
 			JOptionPane.showMessageDialog(null,  "No driver JDBC");
 			e.printStackTrace();
 		}
@@ -40,7 +37,6 @@ public class Invoice {
 			con = DriverManager.getConnection(Invoice.DB_URL);
 			stat = con.createStatement();
 		}catch(SQLException e) {
-			//System.err.println("Problem with opening connection");
 			JOptionPane.showMessageDialog(null,  "Problem with opening connection");
 			e.printStackTrace();
 		}
@@ -99,7 +95,6 @@ public class Invoice {
 			stat.execute(createOrders);
 			stat.execute(createOrders_Details);
 		}catch(SQLException e) {
-			//System.err.println("Error creating tables");
 			JOptionPane.showMessageDialog(null,  "Error with creating tables");
 			e.printStackTrace();
 			return false;
@@ -127,7 +122,6 @@ public class Invoice {
 			prepStmt.setString(5, customerNip);
 			prepStmt.execute();
 		}catch(SQLException e) {
-			//System.err.println("Error with inserting Customer");
 			JOptionPane.showMessageDialog(null, "Error with inserting Customer");
 			e.printStackTrace();
 			return false;
@@ -273,7 +267,6 @@ public class Invoice {
 			prepStmt.setInt(3, productTax);
 			prepStmt.execute();
 		}catch(SQLException e) {
-			//System.err.println("Error with inserting Product");
 			JOptionPane.showMessageDialog(null, "Error with inserting Product");
 			e.printStackTrace();
 			return false;
@@ -414,7 +407,6 @@ public class Invoice {
 
 			
 		}catch(SQLException e) {
-			//System.err.println("Error with inserting Orders");
 			JOptionPane.showMessageDialog(null, "Error with inserting Orders");
 			e.printStackTrace();
 			return false;

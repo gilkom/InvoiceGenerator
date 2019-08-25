@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
 import control.Control;
-import view.*;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -15,10 +14,6 @@ public class CustomerSearch {
 	
 	public CustomerSearch(JFrame frame, JTextArea customerData, JTextArea customerId){
 
-		//JFrame f = new JFrame("Customer search");
-		//f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//f.setLayout(new BorderLayout(5,5));
-		
 		JDialog dialCust = new JDialog(
 				frame, "Customer search:",JDialog.DEFAULT_MODALITY_TYPE);
 		dialCust.setLayout(new BorderLayout(5,5));
@@ -143,7 +138,6 @@ public class CustomerSearch {
 					String res = Control.selectCustomer(rowIndex);
 					res = res.substring(1);
 					res = res.substring(0,res.length() - 1);
-					//customerId.setText("3");
 					customerId.setText(Integer.toString(rowIndex));
 					customerData.setText(res);
 
@@ -163,6 +157,9 @@ public class CustomerSearch {
 		JTextField searchField = new JTextField(15);		
 		JButton search = new JButton("Search");
 		Action searchAction = new AbstractAction() {
+
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String searchValue = searchField.getText();
@@ -229,8 +226,6 @@ public class CustomerSearch {
 			public void run() {
 			dialCust.pack();
 			dialCust.setVisible(true);
-			//f.setSize(800,600);
-			//f.setResizable(false);
 			}
 		});
 	}

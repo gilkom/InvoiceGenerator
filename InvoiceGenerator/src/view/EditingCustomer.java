@@ -8,8 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import control.*;
-import invoice.*;
-import model.*;
 
 public class EditingCustomer {
 	public EditingCustomer(JTable tab, JDialog jd, int rowIndex) {
@@ -49,10 +47,7 @@ public class EditingCustomer {
 		cityField.setText(tab.getValueAt((rowIndex),3).toString());
 		postCodeField.setText(tab.getValueAt((rowIndex),4).toString());
 		nipField.setText(tab.getValueAt((rowIndex),5).toString());
-		//Control.selectCustomer(custId);
-		
-		
-		
+
 		//Panel with buttons: accept and cancel
 		JPanel butPan = new JPanel(new FlowLayout(FlowLayout.RIGHT,20,10));
 		

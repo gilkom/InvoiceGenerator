@@ -1,15 +1,12 @@
 package view;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import control.*;
-import invoice.*;
-import model.*;
 
 public class EditingProduct {
 	public EditingProduct(JTable tab, JDialog dialProd, int rowIndex) {
@@ -33,7 +30,6 @@ public class EditingProduct {
 		JTextField priceField = new JTextField(10);
 	
 		JLabel taxLabel = new JLabel("Tax(%):");
-		//taxLabel.setBorder(new EmptyBorder(0,100,0,0));
 		JTextField taxField = new JTextField(4);
 		
 		

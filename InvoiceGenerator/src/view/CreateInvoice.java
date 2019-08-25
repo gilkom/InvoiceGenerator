@@ -6,17 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
 
 import org.jdatepicker.impl.*;
 
@@ -68,7 +59,6 @@ public class CreateInvoice {
 	private double totalGross;
 	
 	public CreateInvoice() {
-		//Main JFrame
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout(5, 10));
@@ -120,22 +110,20 @@ public class CreateInvoice {
 		invDateProp.put("text.year", "Year");
 		invDatePanel = new JDatePanelImpl(invDateModel, invDateProp);
 		invDatePicker = new JDatePickerImpl(invDatePanel, new DateLabelFormatter());
-		
 		//details JPanel(CENTER)
 		addProduct = new JButton("Add product");
 		editProduct = new JButton("Edit product");
 		removeProduct = new JButton("Remove product");
 		orderDateLabel = new JLabel("Order date:");
 		//Date picker for invoice date
-				ordDateModel = new UtilDateModel();
-				//ordDateModel.setSelected(true);
-				Properties ordDateProp = new Properties();
-				ordDateProp.put("text.today", "Today");
-				ordDateProp.put("text.month", "Month");
-				ordDateProp.put("text.year", "Year");
-				ordDatePanel = new JDatePanelImpl(ordDateModel, ordDateProp);
-				ordDatePicker = new JDatePickerImpl(ordDatePanel, new DateLabelFormatter());
-				
+		ordDateModel = new UtilDateModel();
+		Properties ordDateProp = new Properties();
+		ordDateProp.put("text.today", "Today");
+		ordDateProp.put("text.month", "Month");
+		ordDateProp.put("text.year", "Year");
+		ordDatePanel = new JDatePanelImpl(ordDateModel, ordDateProp);
+		ordDatePicker = new JDatePickerImpl(ordDatePanel, new DateLabelFormatter());
+		//Summary field		
 		totalLabel = new JLabel("Total:");
 		totalLabel.setBorder(BorderFactory.createEmptyBorder(0, 260, 0, 0));
 		totalField = new JTextField(15);
@@ -156,8 +144,7 @@ public class CreateInvoice {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				CustomerSearch cuSearch = new CustomerSearch(frame, customerData, customerId);
-				//customerId = cuSearch.result;
+				new CustomerSearch(frame, customerData, customerId);
 				
 			}
 		});

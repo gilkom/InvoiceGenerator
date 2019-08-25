@@ -2,22 +2,17 @@ package view;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import control.*;
-import invoice.*;
 
 public class AddingCustomer {
 	
 	public AddingCustomer(JTable tab, JDialog jd) {
-		
-		//JFrame f = new JFrame("New customer:");
-		
-		
+
 		JDialog dial =new JDialog(jd,"New customer: ", JDialog.DEFAULT_MODALITY_TYPE);
 		dial.setLayout(new BorderLayout());
 		dial.setPreferredSize(new Dimension(600,200));
