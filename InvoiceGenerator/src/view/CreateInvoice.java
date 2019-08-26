@@ -59,7 +59,7 @@ public class CreateInvoice {
 	private double totalGross;
 	
 	public CreateInvoice() {
-		frame = new JFrame();
+		frame = new JFrame("Invoice Generator");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout(5, 10));
 		
