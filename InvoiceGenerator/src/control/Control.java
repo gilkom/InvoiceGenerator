@@ -195,9 +195,10 @@ public class Control {
 		for(Product p : products) {
 			itemNo++;
 			totalNet = quantity * p.getProductPrice();
-			taxAmount = (p.getProductTax()*p.getProductPrice()* quantity)/100;
-			totalGross = totalNet + taxAmount;
-			
+			taxAmount = Math.round(((
+					p.getProductTax()*p.getProductPrice()* quantity)/100)*100.0)/100.0;
+			totalGross = Math.round((totalNet + taxAmount)*100.0)/100.0;
+			//Math.round(totalGross *100.0)/100.0
 			mapId.put(itemNo, p.getProductId());
 			System.out.println("map0,1,2,3,4,5: "+mapId.get(0)+ ","+mapId.get(1)+ ","+
 					mapId.get(2)+ ","+mapId.get(3)+ ","+mapId.get(4)+","+mapId.get(5));
@@ -212,9 +213,10 @@ public class Control {
 			double productPrice,int productTax)
 	{
 
-		double totalNet = productQuantity * productPrice;
-		double taxAmount = productTax * (productPrice* productQuantity)/100;
-		double totalGross = totalNet + taxAmount;
+		double totalNet = Math.round((productQuantity * productPrice)*100.0)/100.0;
+		double taxAmount = Math.round((
+				productTax * (productPrice* productQuantity)/100)*100.0)/100.0;
+		double totalGross = Math.round((totalNet + taxAmount)*100.0)/100.0;
 		
 		items.setValueAt(productQuantity,  rowIndex, 2);
 		items.setValueAt(productPrice,  rowIndex, 3);
