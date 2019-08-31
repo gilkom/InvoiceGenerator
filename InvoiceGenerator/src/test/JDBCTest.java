@@ -3,11 +3,12 @@ package test;
 
 import invoice.*;
 import view.*;
+import control.*;
 
 public class JDBCTest {
 	public static void main(String[] args) {
-
-		new CreateInvoice();
+		new CreatePdf();
+		//new CreateInvoice();
 		
 		//Adding some sample data to database
 		Invoice i = new Invoice();
