@@ -13,6 +13,7 @@ import org.jdatepicker.impl.*;
 
 import control.DateLabelFormatter;
 import control.Control;
+import control.CreatePdf;
 
 
 public class CreateInvoice {
@@ -216,15 +217,17 @@ public class CreateInvoice {
 			public void actionPerformed(ActionEvent e) {
 			try {
 				//converting date to string
+				int custId = Integer.parseInt(customerId.getText());
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				String ordDate =  sdf.format(ordDateModel.getValue());
+				String invDate =  sdf.format(invDateModel.getValue());
+				Double totalF = Double.parseDouble(totalField.getText());
 				
-				Control.addOrders(Integer.parseInt(customerId.getText()), sdf.format(ordDateModel.getValue()),
-											sdf.format(invDateModel.getValue()),
-											Double.parseDouble(totalField.getText()));
+				Control.addOrders(custId, ordDate, invDate, totalF);
 				int lastId = Control.lastId;
 				Control.addOrders_Details(items, lastId, mapId);
 
-				
+				new CreatePdf(custId,ordDate, invDate, totalF);
 				JOptionPane.showMessageDialog(null, "Invoice saved");
 				model.setRowCount(0);
 				totalGross = 0;

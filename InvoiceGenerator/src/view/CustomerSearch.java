@@ -136,8 +136,6 @@ public class CustomerSearch {
 							table.getValueAt(table.getSelectedRow(),0).toString());
 					// getting customer string and removing signs [ and ] from string
 					String res = Control.selectCustomer(rowIndex);
-					res = res.substring(1);
-					res = res.substring(0,res.length() - 1);
 					customerId.setText(Integer.toString(rowIndex));
 					customerData.setText(res);
 

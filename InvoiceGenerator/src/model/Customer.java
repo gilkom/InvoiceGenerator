@@ -60,5 +60,6 @@ public class Customer {
 		return customerName + "\n Address: " + customerStreet +
 				", " + customerCity + " " + customerPostCode + "\n NIP: " + customerNip;
 	}
+	
 }
 

@@ -79,9 +79,12 @@ public class Control {
 		Invoice i = new Invoice();
 		List<Customer> customers = i.selectCustomerLikeId(rowIndex);
 		result = customers.toString();
+		result = result.substring(1);
+		result = result.substring(0,result.length() - 1);
 		return result;
 	}
-	
+	// getting customer string and removing signs [ and ] from string
+
 	//----------------------------------------------------------------	
 	//----------------------------------------------------------------
 	//----------------------------------------------------------------

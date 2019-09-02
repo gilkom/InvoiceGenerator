@@ -7,7 +7,7 @@ import control.*;
 
 public class JDBCTest {
 	public static void main(String[] args) {
-		new CreatePdf();
+		new CreatePdf(1,"12-09-2019", "03-05-2018", 123.43);
 		//new CreateInvoice();
 		
 		//Adding some sample data to database
