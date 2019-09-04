@@ -246,7 +246,7 @@ public class Control {
 	}
 	
 	public static void removeItem(JTable items, int rowIndex, Map<Integer,Integer> mapId) {
-
+ 
 		DefaultTableModel model = (DefaultTableModel)items.getModel();
 		model.removeRow(rowIndex-1);
 		
