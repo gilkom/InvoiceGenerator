@@ -176,7 +176,7 @@ public class ProductSearch {
 				for(int i =0; i < rowCounter; i++)
 					totalGross = totalGross + (Double)items.getValueAt(i, 7);
 				
-				totalGross = Math.round(totalGross *100.0)/100.0;
+				totalGross = Math.round(totalGross *100d)/100d;
 				totalField.setText(Double.toString(totalGross));
 				
 			}catch(ArrayIndexOutOfBoundsException a) {

@@ -198,7 +198,7 @@ public class CreateInvoice {
 						for(int i =0; i < rowCounter; i++)
 							totalGross = totalGross + (Double)items.getValueAt(i, 7);
 						
-						totalGross = Math.round(totalGross *100.0)/100.0;
+						totalGross = Math.floor(totalGross *100.0)/100.0;
 						totalField.setText(Double.toString(totalGross));
 						
 						
@@ -224,10 +224,10 @@ public class CreateInvoice {
 				Double totalF = Double.parseDouble(totalField.getText());
 				
 				Control.addOrders(custId, ordDate, invDate, totalF);
-				int lastId = Control.lastId;
+				int lastId = Control.lastOrderId;
 				Control.addOrders_Details(items, lastId, mapId);
 
-				new CreatePdf(custId,ordDate, invDate, totalF);
+				new CreatePdf(lastId);
 				JOptionPane.showMessageDialog(null, "Invoice saved");
 				model.setRowCount(0);
 				totalGross = 0;
@@ -264,7 +264,6 @@ public class CreateInvoice {
 		// Creating table for items
 		items = new JTable(model);
 		mapId = new HashMap<Integer, Integer>();
-		System.out.println("map: "+mapId.get(1)+ ", map0: " +mapId.get(0));
 
 		items.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		

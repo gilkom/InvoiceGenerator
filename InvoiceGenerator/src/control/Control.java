@@ -10,7 +10,7 @@ import model.*;
 
 public class Control {
 
-	public static int lastId;
+	public static int lastOrderId;
 	
 	
 	//----------------------------------------------------------------	
@@ -140,6 +140,16 @@ public class Control {
 		
 		return model;
 	}
+	public static List<Product> selectProductLikeId(int prodId) {
+		Invoice i = new Invoice();
+		List<Product> products = i.selectProductLikeId(prodId);
+		return products;
+	}
+	public static List<Product> selectProduct() {
+		Invoice i = new Invoice();
+		List<Product> products = i.selectProduct();
+		return products;
+	}
 	
 	//----------------------------------------------------------------	
 	//----------------------------------------------------------------
@@ -155,9 +165,14 @@ public class Control {
 	{
 		Invoice i = new Invoice();
 		i.insertOrders(customerId, orderDate, invoiceDate, orderTotal);
-		lastId = i.lastId;
+		lastOrderId = i.lastOrderId;
 	}
 	
+	public static List<Orders> selectOrdersLikeId(int orderId) {
+		Invoice i = new Invoice();
+		List<Orders> orders_list = i.selectOrdersLikeId(orderId);
+		return orders_list;
+	}
 	
 	//----------------------------------------------------------------	
 	//----------------------------------------------------------------
@@ -172,8 +187,6 @@ public class Control {
 		int leng = items.getRowCount();
 		
 		for(int j = 0; j < leng; j++) {
-			System.out.println("j: " + j + " item[0]: " + items.getValueAt(j, 0)
-			+ ", item[1]: " + items.getValueAt(j, 1));
 		i.insertOrders_Details(
 				lastId , 
 				Integer.parseInt(items.getValueAt(j, 0).toString()),
@@ -183,6 +196,12 @@ public class Control {
 				Integer.parseInt(items.getValueAt(j, 5).toString()), 
 				Double.parseDouble(items.getValueAt(j, 7).toString()));
 		}
+	}
+	
+	public static List<Orders_Details> selectOrders_DetailsLikeId(int ordId) {
+		Invoice i = new Invoice();
+		List<Orders_Details> orders_details_list = i.selectOrdersDetailsLikeId(ordId);
+		return orders_details_list;
 	}
 	public static void populateOrders_Details(JTable items, int rowIndex, Map<Integer,Integer> mapId) {
 		Invoice i = new Invoice();
@@ -198,13 +217,10 @@ public class Control {
 		for(Product p : products) {
 			itemNo++;
 			totalNet = quantity * p.getProductPrice();
-			taxAmount = Math.round(((
-					p.getProductTax()*p.getProductPrice()* quantity)/100)*100.0)/100.0;
-			totalGross = Math.round((totalNet + taxAmount)*100.0)/100.0;
-			//Math.round(totalGross *100.0)/100.0
+			taxAmount = Math.floor(((
+					p.getProductTax()*p.getProductPrice()* quantity)/100)*100d)/100d;
+			totalGross = Math.floor((totalNet + taxAmount)*100d)/100d;
 			mapId.put(itemNo, p.getProductId());
-			System.out.println("map0,1,2,3,4,5: "+mapId.get(0)+ ","+mapId.get(1)+ ","+
-					mapId.get(2)+ ","+mapId.get(3)+ ","+mapId.get(4)+","+mapId.get(5));
 			model.addRow(new Object[] {itemNo, p.getProductName(), quantity,
 					p.getProductPrice(),totalNet ,p.getProductTax(),
 					taxAmount, totalGross});
@@ -216,10 +232,10 @@ public class Control {
 			double productPrice,int productTax)
 	{
 
-		double totalNet = Math.round((productQuantity * productPrice)*100.0)/100.0;
-		double taxAmount = Math.round((
-				productTax * (productPrice* productQuantity)/100)*100.0)/100.0;
-		double totalGross = Math.round((totalNet + taxAmount)*100.0)/100.0;
+		double totalNet = Math.floor((productQuantity * productPrice)*100d)/100d;
+		double taxAmount = Math.floor((
+				productTax * (productPrice* productQuantity)/100d)*100d)/100d;
+		double totalGross = Math.floor((totalNet + taxAmount)*100d)/100d;
 		
 		items.setValueAt(productQuantity,  rowIndex, 2);
 		items.setValueAt(productPrice,  rowIndex, 3);
@@ -237,8 +253,6 @@ public class Control {
 		//setting the right numbers after removing key from map
 		int mapSize = mapId.size();
 		for(int y = rowIndex;y < mapSize+2;y++) {
-
-			System.out.println(",rowIndget:"+mapId.get(y+1)+"y:"+y+",size:"+mapSize);
 			mapId.replace(y, mapId.get(y+1));
 		}
 		mapId.remove(mapId.size());
