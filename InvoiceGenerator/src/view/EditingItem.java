@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 
 import control.*;
 
@@ -84,8 +85,10 @@ public class EditingItem {
 					for(int i =0; i < rowCounter; i++)
 						totalGross = totalGross + (Double)tab.getValueAt(i, 7);
 					
-					totalGross = Math.round(totalGross *100.0)/100.0;
-					totalField.setText(Double.toString(totalGross));
+
+					DecimalFormat df = new DecimalFormat("0.00");
+					String formattedTotal = df.format(totalGross);
+					totalField.setText(formattedTotal);
 					dial.dispose();
 				}else {
 					JOptionPane.showMessageDialog(null, message);

@@ -133,7 +133,7 @@ public class CreatePdf {
 		//Invoices footer
 		Paragraph footer = new Paragraph();
 		Paragraph totalField = new Paragraph(
-				"Total:" + Math.floor(orders_list.get(0).getOrderTotal())*100d/100d);
+				"Total:  " + Math.floor(orders_list.get(0).getOrderTotal())*100d/100d);
 		Paragraph SignaDot = new Paragraph("..............................             "
 				+ "                         .....................................");
 		Paragraph Signa = new Paragraph("Issuer signature                     "

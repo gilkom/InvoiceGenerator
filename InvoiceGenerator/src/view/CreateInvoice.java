@@ -31,6 +31,7 @@ public class CreateInvoice {
 	private JPanel footer;
 	private JButton selectInvoice;
 	private JButton addCustomer;
+	private JButton addIssuer;
 	private JButton addProduct;
 	private JButton removeProduct;
 	private JButton editProduct;
@@ -71,8 +72,9 @@ public class CreateInvoice {
 		headerUp.setBorder(BorderFactory.createEtchedBorder());
 		headerLow = new JPanel(new GridLayout());
 		headerLow.setBorder(BorderFactory.createEtchedBorder());
+		headerLow.setPreferredSize(new Dimension(100,100));
 		headerLowLeft = new JPanel();
-		headerLowLeft.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
+		headerLowLeft.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 		headerLowRight = new JPanel(new FlowLayout());
 		details = new  JPanel(new BorderLayout());
 		details.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
@@ -96,6 +98,8 @@ public class CreateInvoice {
 		customerData.setPreferredSize(new Dimension(350,50));
 		customerData.setBorder(BorderFactory.createLoweredBevelBorder());
 		customerId = new JTextArea();
+		addIssuer = new JButton("Add issuer");
+		addIssuer.setPreferredSize(new Dimension(120,15));
 		issuerData = new JTextArea(3,30);
 		issuerData.setEditable(false);
 		issuerData.setBackground(new Color(242,242,242));
@@ -138,6 +142,16 @@ public class CreateInvoice {
 		delete = new JButton("Delete");
 		print = new JButton("Print");
 		edit = new JButton("Edit");
+		
+		//Add issuer button
+		addIssuer.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new CustomerSearch(frame, customerData, customerId);
+				
+			}
+		});
 		
 		
 		//Add customer button
@@ -289,6 +303,7 @@ public class CreateInvoice {
 		headerUp.add(invDatePicker);
 		headerLow.add(headerLowLeft);
 		headerLow.add(headerLowRight);
+		headerLowLeft.add(addIssuer);
 		headerLowLeft.add(issuerData);
 		headerLowRight.add(addCustomer);
 		headerLowRight.add(customerData);

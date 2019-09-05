@@ -8,6 +8,7 @@ import control.Control;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class ProductSearch {
@@ -175,10 +176,10 @@ public class ProductSearch {
 				double totalGross = 0;
 				for(int i =0; i < rowCounter; i++)
 					totalGross = totalGross + (Double)items.getValueAt(i, 7);
-				
-				totalGross = Math.round(totalGross *100d)/100d;
-				totalField.setText(Double.toString(totalGross));
-				
+
+				DecimalFormat df = new DecimalFormat("0.00");
+				String formattedTotal = df.format(totalGross);
+				totalField.setText(formattedTotal);
 			}catch(ArrayIndexOutOfBoundsException a) {
 				JOptionPane.showMessageDialog(null,  "Select product to accept!");
 			}
