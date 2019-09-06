@@ -1,7 +1,13 @@
 package control;
 
+import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 //import java.util.Date;
 import java.util.*;
+
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -217,9 +223,9 @@ public class Control {
 		for(Product p : products) {
 			itemNo++;
 			totalNet = quantity * p.getProductPrice();
-			taxAmount = Math.floor(((
+			taxAmount = Math.round(((
 					p.getProductTax()*p.getProductPrice()* quantity)/100)*100d)/100d;
-			totalGross = Math.floor((totalNet + taxAmount)*100d)/100d;
+			totalGross = Math.round((totalNet + taxAmount)*100d)/100d;
 			mapId.put(itemNo, p.getProductId());
 			model.addRow(new Object[] {itemNo, p.getProductName(), quantity,
 					p.getProductPrice(),totalNet ,p.getProductTax(),
@@ -264,4 +270,61 @@ public class Control {
 			model.setValueAt(i+1, i, 0);}
 	}
 	
+	public static Customer createIssuer(String customerName, String customerStreet,
+			String customerCity, String customerPostCode, String customerNip){
+		
+		Customer c = new Customer(0, customerName, customerStreet,
+				customerCity, customerPostCode, customerNip);
+		
+		try {
+			FileOutputStream fo = new FileOutputStream(new File("issuer.txt"));
+			ObjectOutputStream oo  = new ObjectOutputStream(fo);
+			
+			oo.writeObject(c);
+			
+			oo.close();
+			fo.close();
+			
+			FileInputStream fi = new FileInputStream(new File("issuer.txt"));
+			ObjectInputStream oi = new ObjectInputStream(fi);
+			
+			c = (Customer)oi.readObject();
+			oi.close();
+			fi.close();
+			
+		}catch(FileNotFoundException e) {
+			JOptionPane.showMessageDialog(null, "File not found");
+		}catch(IOException e) {
+			JOptionPane.showMessageDialog(null, "Error initializing stream");
+		}catch(ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return c;
+	}
+	public static Customer getIssuer(){
+		
+		Customer c = new Customer();
+		
+		try {
+			
+			FileInputStream fi = new FileInputStream(new File("issuer.txt"));
+			ObjectInputStream oi = new ObjectInputStream(fi);
+			
+			c = (Customer)oi.readObject();
+			oi.close();
+			fi.close();
+			
+		}catch(FileNotFoundException e) {
+			JOptionPane.showMessageDialog(null, "File not found");
+		}catch(IOException e) {
+			JOptionPane.showMessageDialog(null, "Error initializing stream");
+		}catch(ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return c;
+	}
+	
 }
+
+
+

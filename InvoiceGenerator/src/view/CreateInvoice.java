@@ -103,7 +103,8 @@ public class CreateInvoice {
 		issuerData = new JTextArea(3,30);
 		issuerData.setEditable(false);
 		issuerData.setBackground(new Color(242,242,242));
-		issuerData.setBorder(BorderFactory.createLoweredBevelBorder());		
+		issuerData.setBorder(BorderFactory.createLoweredBevelBorder());	
+		issuerData.setText((Control.getIssuer()).toString());
 		invoiceDateLabel = new JLabel("Invoice date:");
 		invoiceDateLabel.setBorder(BorderFactory.createEmptyBorder(0, 280, 0, 0));
 		//Date picker for invoice date
@@ -148,7 +149,7 @@ public class CreateInvoice {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new CustomerSearch(frame, customerData, customerId);
+				new AddingIssuer(frame, issuerData);
 				
 			}
 		});
@@ -212,7 +213,7 @@ public class CreateInvoice {
 						for(int i =0; i < rowCounter; i++)
 							totalGross = totalGross + (Double)items.getValueAt(i, 7);
 						
-						totalGross = Math.floor(totalGross *100.0)/100.0;
+						totalGross = Math.floor(totalGross *100d)/100d;
 						totalField.setText(Double.toString(totalGross));
 						
 						

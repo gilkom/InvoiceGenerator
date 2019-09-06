@@ -28,16 +28,15 @@ public class CreatePdf {
 			Document document = new Document();
 			PdfWriter.getInstance(document,  new FileOutputStream(FILE));
 			document.open();
-			addMetaData(document);
-			//addContent(document,id, ordDate, invDate, totalF, items,lastId,  mapId);
+			addMetaData(document,lastId);
 			addContent(document, lastId);
 			document.close();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
-	private static void addMetaData(Document document) {
-		document.addTitle("My first PDF");
+	private static void addMetaData(Document document, int lastId) {
+		document.addTitle("Invoice " + lastId);
 	}
 	//private static void addContent(Document document, int id, String ordDate, String invDate
 	//, Double totalF, JTable items,int lastId, Map<Integer,Integer> mapId) throws DocumentException{
@@ -57,7 +56,8 @@ public class CreatePdf {
 		Paragraph orderDate = new Paragraph("Order Date: "+ orders_list.get(0).getOrderDate());
 		Paragraph customerDetails = new Paragraph("Customer details:\n"+ 
 												Control.selectCustomer(orders_list.get(0).getCustomerId()));
-		Paragraph issuerDetails = new Paragraph("Issuer details: \n " +"x"+"\n" + "x");
+		Paragraph issuerDetails = new Paragraph("Issuer details: \n " +
+												Control.getIssuer());
 		
 		orderDate.setAlignment(2);
 		invoiceDate.setAlignment(2);

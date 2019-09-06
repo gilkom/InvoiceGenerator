@@ -177,9 +177,11 @@ public class ProductSearch {
 				for(int i =0; i < rowCounter; i++)
 					totalGross = totalGross + (Double)items.getValueAt(i, 7);
 
-				DecimalFormat df = new DecimalFormat("0.00");
-				String formattedTotal = df.format(totalGross);
-				totalField.setText(formattedTotal);
+				//DecimalFormat df = new DecimalFormat("0.00");
+				//String formattedTotal = df.format(totalGross);
+				totalGross = Math.floor((totalGross)*100d)/100d;
+				//totalField.setText(formattedTotal);
+				totalField.setText(Double.toString(totalGross));
 			}catch(ArrayIndexOutOfBoundsException a) {
 				JOptionPane.showMessageDialog(null,  "Select product to accept!");
 			}
