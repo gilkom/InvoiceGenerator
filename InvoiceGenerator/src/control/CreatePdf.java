@@ -108,24 +108,24 @@ public class CreatePdf {
 					orders_details_list.get(i).getItemQuantity());
 			String purchasePrice = Double.toString(
 					orders_details_list.get(i).getPurchasePrice());
-			String totalNet = Double.toString(
-					Math.floor(Double.valueOf(itemQuantity) * Double.valueOf(purchasePrice)*100.00)/100d);
+			Double totalNet = 
+					Double.valueOf(itemQuantity) * Double.valueOf(purchasePrice);
 			String taxRate = Integer.toString(orders_details_list.get(i).getItemTax());
 
-			String taxAmount = Double.toString(
-					Math.floor((Double.valueOf(taxRate)* (Double.valueOf(purchasePrice) *
-					Double.valueOf(itemQuantity))/100d)*100d)/100d);
-			String totalGross = Double.toString(
-					Math.floor((Double.valueOf(totalNet) + Double.valueOf(taxAmount))*100)/100d); 
-			
+			Double taxAmount =
+					(Double.valueOf(taxRate)* (Double.valueOf(purchasePrice) *
+					Double.valueOf(itemQuantity))/100d);
+			Double totalGross =
+					(Double.valueOf(totalNet) + Double.valueOf(taxAmount)); 
+
 			table.addCell(new PdfPCell(new Paragraph(itemNo)));
 			table.addCell(new PdfPCell(new Paragraph(itemName)));
 			table.addCell(new PdfPCell(new Paragraph(itemQuantity)));
 			table.addCell(new PdfPCell(new Paragraph(purchasePrice)));
-			table.addCell(new PdfPCell(new Paragraph(totalNet)));
+			table.addCell(new PdfPCell(new Paragraph(Control.formatValue(totalNet))));
 			table.addCell(new PdfPCell(new Paragraph(taxRate)));	
-			table.addCell(new PdfPCell(new Paragraph(taxAmount)));
-			table.addCell(new PdfPCell(new Paragraph(totalGross)));
+			table.addCell(new PdfPCell(new Paragraph(Control.formatValue(taxAmount))));
+			table.addCell(new PdfPCell(new Paragraph(Control.formatValue(totalGross))));
 			
 
 		}
@@ -133,7 +133,7 @@ public class CreatePdf {
 		//Invoices footer
 		Paragraph footer = new Paragraph();
 		Paragraph totalField = new Paragraph(
-				"Total:  " + Math.floor(orders_list.get(0).getOrderTotal())*100d/100d);
+				"Total:  " + Control.formatValue(orders_list.get(0).getOrderTotal()));
 		Paragraph SignaDot = new Paragraph("..............................             "
 				+ "                         .....................................");
 		Paragraph Signa = new Paragraph("Issuer signature                     "

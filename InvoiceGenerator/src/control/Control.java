@@ -4,6 +4,8 @@ import java.io.*;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 //import java.util.Date;
 import java.util.*;
 
@@ -17,7 +19,7 @@ import model.*;
 public class Control {
 
 	public static int lastOrderId;
-	
+	public static DecimalFormat df = new DecimalFormat("0.00");
 	
 	//----------------------------------------------------------------	
 	//----------------------------------------------------------------
@@ -223,13 +225,13 @@ public class Control {
 		for(Product p : products) {
 			itemNo++;
 			totalNet = quantity * p.getProductPrice();
-			taxAmount = Math.round(((
-					p.getProductTax()*p.getProductPrice()* quantity)/100)*100d)/100d;
-			totalGross = Math.round((totalNet + taxAmount)*100d)/100d;
+			taxAmount =(((
+					p.getProductTax()*p.getProductPrice()* quantity)/100));
+			totalGross = (totalNet + taxAmount);
 			mapId.put(itemNo, p.getProductId());
 			model.addRow(new Object[] {itemNo, p.getProductName(), quantity,
 					p.getProductPrice(),totalNet ,p.getProductTax(),
-					taxAmount, totalGross});
+					Control.formatValue(taxAmount), Control.formatValue(totalGross)});
 		}
 
 	}
@@ -322,6 +324,11 @@ public class Control {
 			e.printStackTrace();
 		}
 		return c;
+	}
+	public static String formatValue(double comVal) {
+		String formattedResult = df.format(new BigDecimal(comVal));
+		String replacedResult = formattedResult.replace(",",".");
+		return replacedResult;
 	}
 	
 }

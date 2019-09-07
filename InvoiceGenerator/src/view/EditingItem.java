@@ -85,10 +85,7 @@ public class EditingItem {
 					for(int i =0; i < rowCounter; i++)
 						totalGross = totalGross + (Double)tab.getValueAt(i, 7);
 					
-
-					DecimalFormat df = new DecimalFormat("0.00");
-					String formattedTotal = df.format(totalGross);
-					totalField.setText(formattedTotal);
+					totalField.setText(Control.formatValue(totalGross));
 					dial.dispose();
 				}else {
 					JOptionPane.showMessageDialog(null, message);

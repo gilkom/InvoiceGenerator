@@ -8,12 +8,16 @@ import control.Control;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.*;
 
 public class ProductSearch {
 	JTable table;
-	
+
 	
 	public ProductSearch(JTable items, JFrame frame, JTextField totalField, Map<Integer,Integer> mapId){
 		
@@ -174,14 +178,13 @@ public class ProductSearch {
 				//calculating and setting totalGross value
 				int rowCounter = items.getRowCount();
 				double totalGross = 0;
+				String tot = "";
 				for(int i =0; i < rowCounter; i++)
-					totalGross = totalGross + (Double)items.getValueAt(i, 7);
+					tot = items.getValueAt(i, 7).toString();
+					totalGross = totalGross + Double.parseDouble(tot);
 
-				//DecimalFormat df = new DecimalFormat("0.00");
-				//String formattedTotal = df.format(totalGross);
-				totalGross = Math.floor((totalGross)*100d)/100d;
-				//totalField.setText(formattedTotal);
-				totalField.setText(Double.toString(totalGross));
+				totalField.setText(Control.formatValue(totalGross));
+				
 			}catch(ArrayIndexOutOfBoundsException a) {
 				JOptionPane.showMessageDialog(null,  "Select product to accept!");
 			}

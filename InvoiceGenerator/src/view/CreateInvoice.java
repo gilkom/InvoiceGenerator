@@ -213,8 +213,7 @@ public class CreateInvoice {
 						for(int i =0; i < rowCounter; i++)
 							totalGross = totalGross + (Double)items.getValueAt(i, 7);
 						
-						totalGross = Math.floor(totalGross *100d)/100d;
-						totalField.setText(Double.toString(totalGross));
+						totalField.setText(Control.formatValue(totalGross));
 						
 						
 					}
