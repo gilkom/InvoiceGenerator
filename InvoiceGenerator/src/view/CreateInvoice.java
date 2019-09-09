@@ -144,6 +144,15 @@ public class CreateInvoice {
 		print = new JButton("Print");
 		edit = new JButton("Edit");
 		
+		//Select invoice button
+		selectInvoice.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new InvoiceSearch(frame);
+			}
+		});
+		
+		
 		//Add issuer button
 		addIssuer.addActionListener(new ActionListener() {
 			

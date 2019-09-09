@@ -179,9 +179,10 @@ public class ProductSearch {
 				int rowCounter = items.getRowCount();
 				double totalGross = 0;
 				String tot = "";
-				for(int i =0; i < rowCounter; i++)
+				for(int i =0; i < rowCounter; i++) {
 					tot = items.getValueAt(i, 7).toString();
 					totalGross = totalGross + Double.parseDouble(tot);
+				}
 
 				totalField.setText(Control.formatValue(totalGross));
 				
