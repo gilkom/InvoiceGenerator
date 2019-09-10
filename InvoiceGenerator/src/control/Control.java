@@ -182,6 +182,21 @@ public class Control {
 		return orders_list;
 	}
 	
+	public static DefaultTableModel populateOrders() {
+		Invoice i = new Invoice();
+		List<Orders> orders_list = i.selectOrders();
+		
+		DefaultTableModel model = new DefaultTableModel(new String[] {
+				"Id", "CustomerId", "OrderDate", "InvoiceDate", "Total"},0);
+		
+		for(Orders p : orders_list) {
+			model.addRow(new Object[] {p.getOrderId(),p.getCustomerId(),
+					p.getOrderDate(),p.getInvoiceDate(), p.getOrderTotal()});
+		}
+		
+		return model;
+	}
+	
 	//----------------------------------------------------------------	
 	//----------------------------------------------------------------
 	//----------------------------------------------------------------
