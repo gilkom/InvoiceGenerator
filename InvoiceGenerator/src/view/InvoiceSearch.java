@@ -11,6 +11,8 @@ import model.*;
 
 import java.awt.*;
 import java.awt.List;
+import java.awt.event.ActionEvent;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class InvoiceSearch {
@@ -32,6 +34,7 @@ public class InvoiceSearch {
 	private JDatePanelImpl endDatePanel;
 	private JDatePickerImpl endDatePicker;
 	private JTable table;
+	private JScrollPane scr;
 	
 	public InvoiceSearch(JFrame frame){
 		dialInv = new JDialog(
@@ -63,6 +66,8 @@ public class InvoiceSearch {
 
 		
 		startDateModel = new UtilDateModel();
+		startDateModel.setDate(1900, 01, 01);
+		startDateModel.setSelected(true);
 		dateProp = new Properties();
 		dateProp.put("text.today", "Today");
 		dateProp.put("text.month", "Month");
@@ -73,27 +78,71 @@ public class InvoiceSearch {
 		startDatePicker.setBorder(BorderFactory.createTitledBorder("Start date:"));
 		
 		endDateModel = new UtilDateModel();
+		endDateModel.setSelected(true);
 		endDatePanel = new JDatePanelImpl(endDateModel, dateProp);
 		endDatePicker = new JDatePickerImpl(endDatePanel, new DateLabelFormatter());
 		endDatePicker.setPreferredSize(new Dimension(130,50));
 		endDatePicker.setBorder(BorderFactory.createTitledBorder("End date:"));
 		
+		//searching for customer name like %x% and date between two selected dates
 		searchField = new JTextField(20);
 		search = new JButton("Search:");
-		
-		
-		table = new JTable(Control.populateOrders());
+		Action searchAction = new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+				String searchValue = searchField.getText();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				String startDate = sdf.format(startDateModel.getValue());
+				String endDate = sdf.format(endDateModel.getValue());
+				table.setModel(Control.populateOrdersLike(searchValue,startDate,endDate));
+				table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+				table.getColumnModel().getColumn(0).setPreferredWidth(30);
+				table.getColumnModel().getColumn(1).setPreferredWidth(228);
+				table.getColumnModel().getColumn(2).setPreferredWidth(100);
+				table.getColumnModel().getColumn(3).setPreferredWidth(100);
+				table.getColumnModel().getColumn(4).setPreferredWidth(100);
+				}catch(NullPointerException n) {
+					JOptionPane.showMessageDialog(null, "Choose date");
+				
+				}
+			}
+		};
+		searchField.addActionListener(searchAction);
+		search.addActionListener(searchAction);
+		
+		
+		//Table with invoices on the panel
+		table = new JTable(Control.populateOrders());
+		table.setDefaultEditor(Object.class, null);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table.getColumnModel().getColumn(0).setPreferredWidth(30);
+		table.getColumnModel().getColumn(1).setPreferredWidth(228);
+		table.getColumnModel().getColumn(2).setPreferredWidth(100);
+		table.getColumnModel().getColumn(3).setPreferredWidth(100);
+		table.getColumnModel().getColumn(4).setPreferredWidth(100);
+
+		
+		scr = new JScrollPane(table,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+								JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scr.setPreferredSize(new Dimension(575,230));
 		
 		
 		
 		
 		//Adding to panels
-
+		
 		NorthPanIn.add(startDatePicker);
 		NorthPanIn.add(endDatePicker);
 		NorthPanIn.add(search);
 		NorthPanIn.add(searchField);
+		CenterPanIn.add(scr);
 		SouthPanIn.add(accept);
 		
 		NorthPan.add(NorthPanIn);

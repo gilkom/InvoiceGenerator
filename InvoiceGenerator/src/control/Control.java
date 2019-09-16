@@ -91,6 +91,16 @@ public class Control {
 		result = result.substring(0,result.length() - 1);
 		return result;
 	}
+	public static List<Customer> selectCustomerLikeId(int rowIndex) {
+		Invoice i = new Invoice();
+		List<Customer> customers = i.selectCustomerLikeId(rowIndex);
+		return customers;
+	}
+	public static List<Customer> selectCustomers() {
+		Invoice i = new Invoice();
+		List<Customer> customers = i.selectCustomer();
+		return customers;
+	}
 	// getting customer string and removing signs [ and ] from string
 
 	//----------------------------------------------------------------	
@@ -185,15 +195,35 @@ public class Control {
 	public static DefaultTableModel populateOrders() {
 		Invoice i = new Invoice();
 		List<Orders> orders_list = i.selectOrders();
+		List<Customer> customers = selectCustomers();
+		int c;
+		
 		
 		DefaultTableModel model = new DefaultTableModel(new String[] {
 				"Id", "CustomerId", "OrderDate", "InvoiceDate", "Total"},0);
 		
 		for(Orders p : orders_list) {
-			model.addRow(new Object[] {p.getOrderId(),p.getCustomerId(),
+			c = p.getCustomerId();
+			model.addRow(new Object[] {p.getOrderId(),customers.get(c-1).getCustomerName(),
 					p.getOrderDate(),p.getInvoiceDate(), p.getOrderTotal()});
 		}
 		
+		return model;
+	}
+	public static DefaultTableModel populateOrdersLike(
+			String name, String startDate,String endDate) {
+		Invoice i = new Invoice();
+		List<Orders> orders_list = i.selectOrdersLike(name, startDate, endDate);
+		List<Customer> customers = i.selectCustomer();
+		int c;
+		
+		DefaultTableModel model = new DefaultTableModel(new String[] {
+				"Id", "CustomerId", "OrderDate", "InvoiceDate", "Total"},0);
+		for(Orders p : orders_list) {
+			c = p.getCustomerId();
+			model.addRow(new Object[] {p.getOrderId(),customers.get(c-1).getCustomerName(),
+					p.getOrderDate(),p.getInvoiceDate(), p.getOrderTotal()});
+		}
 		return model;
 	}
 	

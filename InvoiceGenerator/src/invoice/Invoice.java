@@ -464,6 +464,40 @@ public class Invoice {
 		}
 		return orders_list;
 	}
+	
+	public List<Orders> selectOrdersLike(String name, String startDate, String endDate){
+		List<Orders> orders_list = new LinkedList<Orders>();
+		List<Customer> customers = selectCustomerLike(name);
+		StringBuilder builder = new StringBuilder();
+		for(int i = 0; i < customers.size();i++) {
+			builder.append(customers.get(i).getCustomerId()+",");
+		}
+		if(builder.length()>0) {
+			builder.deleteCharAt(builder.lastIndexOf(","));
+		}
+		try {
+			ResultSet result = stat.executeQuery(
+					"SELECT * FROM Orders WHERE CustomerId IN (" + builder +")"
+					+ " AND OrderDate BETWEEN '" +startDate +"' AND '"+endDate+"';");
+			int orderId, customerId;
+			String orderDate, invoiceDate;
+			double orderTotal;
+			while(result.next()) {
+				orderId = result.getInt("orderId");
+				customerId = result.getInt("customerId");
+				orderDate = result.getString("orderDate");
+				invoiceDate =result.getString("invoiceDate");
+				orderTotal = result.getDouble("orderTotal");
+				orders_list.add(new Orders(orderId, customerId, orderDate,
+						invoiceDate, orderTotal));
+			}
+		}catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, "Error while selecting from orders");
+			e.printStackTrace();
+			return null;
+		}
+		return orders_list;
+	}
 	//----------------------------------------------------------------
 	//----------------------------------------------------------------
 	//----------------------------------------------------------------
