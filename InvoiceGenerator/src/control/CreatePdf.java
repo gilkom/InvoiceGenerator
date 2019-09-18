@@ -35,6 +35,21 @@ public class CreatePdf {
 			e.printStackTrace();
 		}
 	}
+	public CreatePdf(int lastId, File file) {
+		String filenameId = Integer.toString(lastId);
+		FILE = "Invoice " + filenameId;
+		try {
+			Document document = new Document();
+			//PdfWriter.getInstance(document,  new FileOutputStream(name));
+			PdfWriter.getInstance(document, new FileOutputStream(file));
+			document.open();
+			addMetaData(document,lastId);
+			addContent(document, lastId);
+			document.close();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 	private static void addMetaData(Document document, int lastId) {
 		document.addTitle("Invoice " + lastId);
 	}

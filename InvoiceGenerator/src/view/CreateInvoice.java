@@ -4,6 +4,7 @@ package view;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.swing.*;
@@ -29,6 +30,9 @@ public class CreateInvoice {
 	private JPanel detailsCenter;
 	private JPanel detailsSouth;
 	private JPanel footer;
+	private JPanel footerIn;
+	private JPanel footerLeft;
+	private JPanel footerRight;
 	private JButton selectInvoice;
 	private JButton addCustomer;
 	private JButton addIssuer;
@@ -36,10 +40,9 @@ public class CreateInvoice {
 	private JButton removeProduct;
 	private JButton editProduct;
 	private JButton save;
-	private JButton savePrint;
-	private JButton delete;
-	private JButton print;
-	private JButton edit;
+	private JButton saveAs;
+	private JButton cancel;
+	private JButton exit;
 	private JTextField totalField;
 	private JTextArea customerId;
 	private JTextArea customerData;
@@ -86,6 +89,12 @@ public class CreateInvoice {
 		detailsSouth.setBorder(BorderFactory.createEtchedBorder());
 		footer = new JPanel();
 		footer.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+		footerIn = new JPanel();
+		footerIn.setBorder(BorderFactory.createEtchedBorder());
+		footerLeft = new JPanel();
+		footerRight = new JPanel();
+		footerRight.setBorder(BorderFactory.createEmptyBorder(0,450,0,0));
+		
 		
 		
 		//header JPanel(NORTH)
@@ -139,10 +148,9 @@ public class CreateInvoice {
 		
 		//Footer JPanel (SOUTH)
 		save = new JButton("Save");
-		savePrint = new JButton("Save print");
-		delete = new JButton("Delete");
-		print = new JButton("Print");
-		edit = new JButton("Edit");
+		saveAs = new JButton("Save as");
+		cancel = new JButton("Cancel");
+		exit = new JButton("Exit");
 		
 		//Select invoice button
 		selectInvoice.addActionListener(new ActionListener() {
@@ -266,7 +274,73 @@ public class CreateInvoice {
 			}
 			}
 		});
+		saveAs.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					//converting date to string
+					int custId = Integer.parseInt(customerId.getText());
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					String ordDate =  sdf.format(ordDateModel.getValue());
+					String invDate =  sdf.format(invDateModel.getValue());
+					Double totalF = Double.parseDouble(totalField.getText());
+					//adding data to orders and orders_details
+					Control.addOrders(custId, ordDate, invDate, totalF);
+					int lastId = Control.lastOrderId;
+					Control.addOrders_Details(items, lastId, mapId);
+					
+					//choosing directory and name
+					String dir = "C:\\Invoice "+lastId;
+					JFileChooser fc = new JFileChooser();
+					fc.setCurrentDirectory(new File(dir));	
+					fc.setDialogTitle("Save as:");
+					fc.setSelectedFile(new File(dir));
+
+					int returnVal = fc.showOpenDialog(frame);
+					if(returnVal == JFileChooser.APPROVE_OPTION) {
+						File file = fc.getSelectedFile();
+						new CreatePdf(lastId, file);
+						JOptionPane.showMessageDialog(null, "Invoice saved");
+						model.setRowCount(0);
+						totalGross = 0;
+						totalField.setText("");
+						customerId.setText("");
+						customerData.setText("");
+						ordDateModel.setSelected(false);
+						mapId.clear();
+					}
+					}catch(NumberFormatException a) {
+						JOptionPane.showMessageDialog(null,  "All fields have to be filled!");
+					}catch(NullPointerException an) {
+						JOptionPane.showMessageDialog(null,  "All fields have to be filled!");
+					}
+			}
+		});
 		
+		cancel.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Invoice cancelled");
+				model.setRowCount(0);
+				totalGross = 0;
+				totalField.setText("");
+				customerId.setText("");
+				customerData.setText("");
+				ordDateModel.setSelected(false);
+				mapId.clear();
+				
+			}
+		});
+		exit.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+				
+			}
+		});
 		
 		//create empty table model
 		model = new DefaultTableModel(new String[] {
@@ -327,11 +401,13 @@ public class CreateInvoice {
 		detailsSouth.add(ordDatePicker, BorderLayout.SOUTH);
 		detailsSouth.add(totalLabel, BorderLayout.SOUTH);
 		detailsSouth.add(totalField, BorderLayout.SOUTH);
-		footer.add(save);
-		footer.add(savePrint);
-		footer.add(delete);
-		footer.add(print);
-		footer.add(edit);
+		footerLeft.add(save);
+		footerLeft.add(saveAs);
+		footerLeft.add(cancel);
+		footerRight.add(exit);
+		footerIn.add(footerLeft);
+		footerIn.add(footerRight);
+		footer.add(footerIn);
 		
 
 		//adding jpanels to Jframe

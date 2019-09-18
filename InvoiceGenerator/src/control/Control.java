@@ -200,7 +200,7 @@ public class Control {
 		
 		
 		DefaultTableModel model = new DefaultTableModel(new String[] {
-				"Id", "CustomerId", "OrderDate", "InvoiceDate", "Total"},0);
+				"Inv.", "Customer name", "Order date", "Invoice date", "Total"},0);
 		
 		for(Orders p : orders_list) {
 			c = p.getCustomerId();
@@ -218,7 +218,7 @@ public class Control {
 		int c;
 		
 		DefaultTableModel model = new DefaultTableModel(new String[] {
-				"Id", "CustomerId", "OrderDate", "InvoiceDate", "Total"},0);
+				"Inv. ", "Customer name", "Order date", "Invoice date", "Total"},0);
 		for(Orders p : orders_list) {
 			c = p.getCustomerId();
 			model.addRow(new Object[] {p.getOrderId(),customers.get(c-1).getCustomerName(),
