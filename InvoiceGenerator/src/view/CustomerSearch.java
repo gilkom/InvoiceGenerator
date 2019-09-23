@@ -138,7 +138,7 @@ public class CustomerSearch {
 					String res = Control.selectCustomer(rowIndex);
 					customerId.setText(Integer.toString(rowIndex));
 					customerData.setText(res);
-
+					
 					dialCust.dispose();	
 				}catch(ArrayIndexOutOfBoundsException a) {
 					JOptionPane.showMessageDialog(null, "Select customer to accept!");
@@ -149,7 +149,13 @@ public class CustomerSearch {
 
 			}
 		});
-		
+		JButton cancel = new JButton("Cancel");
+		cancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dialCust.dispose();	
+			}
+		});
 		
 		//searching for name like %x%
 		JTextField searchField = new JTextField(15);		
@@ -207,6 +213,7 @@ public class CustomerSearch {
 		LeftButPan.add(delete);
 		LeftButPan.add(edit);
 		SouthPan.add(accept);
+		SouthPan.add(cancel);
 		RightOuterButPan.add(RightButPan);
 		RightButPan.add(search);
 		RightButPan.add(searchField);

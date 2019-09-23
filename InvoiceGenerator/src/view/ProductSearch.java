@@ -191,7 +191,13 @@ public class ProductSearch {
 			}
 			}
 		});
-		
+		JButton cancel = new JButton("Cancel");
+		cancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dialProd.dispose();	
+			}
+		});
 		
 		
 		JPanel TabPan = new JPanel();
@@ -219,6 +225,7 @@ public class ProductSearch {
 		LeftButPan.add(delete);
 		LeftButPan.add(edit);
 		SouthPan.add(accept);
+		SouthPan.add(cancel);
 		RightOuterButPan.add(RightButPan);
 		RightButPan.add(search);
 		RightButPan.add(searchField);

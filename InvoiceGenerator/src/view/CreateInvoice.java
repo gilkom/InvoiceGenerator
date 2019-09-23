@@ -2,9 +2,11 @@ package view;
 
 
 import java.awt.*;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.swing.*;
@@ -13,6 +15,8 @@ import javax.swing.table.DefaultTableModel;
 import org.jdatepicker.impl.*;
 
 import control.DateLabelFormatter;
+import invoice.Invoice;
+import model.Orders;
 import control.Control;
 import control.CreatePdf;
 
@@ -44,6 +48,7 @@ public class CreateInvoice {
 	private JButton cancel;
 	private JButton exit;
 	private JTextField totalField;
+	private JTextField invoiceId;
 	private JTextArea customerId;
 	private JTextArea customerData;
 	private JTextArea issuerData;
@@ -107,6 +112,7 @@ public class CreateInvoice {
 		customerData.setPreferredSize(new Dimension(350,50));
 		customerData.setBorder(BorderFactory.createLoweredBevelBorder());
 		customerId = new JTextArea();
+		invoiceId = new JTextField();
 		addIssuer = new JButton("Add issuer");
 		addIssuer.setPreferredSize(new Dimension(120,15));
 		issuerData = new JTextArea(3,30);
@@ -132,6 +138,17 @@ public class CreateInvoice {
 		orderDateLabel = new JLabel("Order date:");
 		//Date picker for invoice date
 		ordDateModel = new UtilDateModel();
+		/*
+		String sDate1 = "31/12/1998";
+		Date date1 = null;
+		try {
+			date1 = new SimpleDateFormat("dd/MM/yyyy").parse(sDate1);
+		} catch (ParseException e1) {
+
+			e1.printStackTrace();
+		}
+		ordDateModel.setValue(date1);
+		*/
 		Properties ordDateProp = new Properties();
 		ordDateProp.put("text.today", "Today");
 		ordDateProp.put("text.month", "Month");
@@ -156,7 +173,7 @@ public class CreateInvoice {
 		selectInvoice.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new InvoiceSearch(frame);
+				new InvoiceSearch(frame, customerData, invoiceId, ordDateModel, invDateModel,items, totalField);				
 			}
 		});
 		

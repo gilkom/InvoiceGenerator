@@ -226,7 +226,21 @@ public class Control {
 		}
 		return model;
 	}
-	
+	public static DefaultTableModel populateOrdersClean(int orderId) {
+		Invoice i = new Invoice();
+		List<Orders> orders_list = i.selectOrdersLikeId(orderId);
+		
+		
+		DefaultTableModel model = new DefaultTableModel(new String[] {
+				"Inv.", "Customer name", "Order date", "Invoice date", "Total"},0);
+		
+		for(Orders p : orders_list) {
+			model.addRow(new Object[] {p.getOrderId(),p.getCustomerId(),
+					p.getOrderDate(),p.getInvoiceDate(), p.getOrderTotal()});
+		}
+		
+		return model;
+	}
 	//----------------------------------------------------------------	
 	//----------------------------------------------------------------
 	//----------------------------------------------------------------
@@ -255,6 +269,33 @@ public class Control {
 		Invoice i = new Invoice();
 		List<Orders_Details> orders_details_list = i.selectOrdersDetailsLikeId(ordId);
 		return orders_details_list;
+	}
+	public static void selectOrders_DetailsLikeId(JTable items, int ordId) {
+		Invoice i = new Invoice();
+		List<Orders_Details> orders_details_list = i.selectOrdersDetailsLikeId(ordId);
+		List<Product> products = i.selectProduct();
+		int p;
+		DefaultTableModel model = (DefaultTableModel) items.getModel();
+		model.setRowCount(0);
+		
+		int quantity = 0;
+		double totalNet = 0;
+		double taxAmount = 0;
+		double totalGross = 0;
+		
+		for(Orders_Details o : orders_details_list) {
+			p = o.getProductId();
+			quantity = o.getItemQuantity();
+			totalNet = Math.floor((quantity * o.getPurchasePrice())*100d)/100d;
+			taxAmount = Math.floor(((
+					o.getItemTax()*o.getPurchasePrice()*quantity)/100)*100d)/100d;
+			totalGross = Math.floor((totalNet + taxAmount)*100d)/100d;
+			model.addRow(new Object[] {o.getItemNumber(),products.get(p-1).getProductName(),
+					o.getItemQuantity(),o.getPurchasePrice(), totalNet,
+					o.getItemTax(),taxAmount, totalGross});
+
+		}
+		
 	}
 	public static void populateOrders_Details(JTable items, int rowIndex, Map<Integer,Integer> mapId) {
 		Invoice i = new Invoice();

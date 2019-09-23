@@ -12,6 +12,8 @@ import model.*;
 import java.awt.*;
 import java.awt.List;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -24,6 +26,7 @@ public class InvoiceSearch {
 	private JPanel SouthPan;
 	private JPanel SouthPanIn;
 	private JButton accept;
+	private JButton cancel;
 	private JButton search;
 	private JTextField searchField;
 	private UtilDateModel startDateModel;
@@ -34,9 +37,13 @@ public class InvoiceSearch {
 	private JDatePanelImpl endDatePanel;
 	private JDatePickerImpl endDatePicker;
 	private JTable table;
+	private JTable tab;
 	private JScrollPane scr;
 	
-	public InvoiceSearch(JFrame frame){
+	public InvoiceSearch(JFrame frame,JTextArea customerData, JTextField invoiceId,
+			UtilDateModel ordDateModel, UtilDateModel invDateModel, JTable items,
+			JTextField totalField){
+
 		dialInv = new JDialog(
 				frame, "Invoice search:", JDialog.DEFAULT_MODALITY_TYPE);
 		dialInv.setLayout(new BorderLayout(5,0));
@@ -63,7 +70,7 @@ public class InvoiceSearch {
 		SouthPanIn.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		
 		accept = new JButton("Accept");
-
+		cancel = new JButton("Cancel");
 		
 		startDateModel = new UtilDateModel();
 		startDateModel.setDate(1900, 01, 01);
@@ -84,15 +91,13 @@ public class InvoiceSearch {
 		endDatePicker.setPreferredSize(new Dimension(130,50));
 		endDatePicker.setBorder(BorderFactory.createTitledBorder("End date:"));
 		
+		
 		//searching for customer name like %x% and date between two selected dates
 		searchField = new JTextField(20);
 		search = new JButton("Search:");
+		
 		Action searchAction = new AbstractAction() {
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -113,6 +118,74 @@ public class InvoiceSearch {
 				}
 			}
 		};
+		
+		accept.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					//selecting invoice number
+					int invNumber = Integer.parseInt(
+							table.getValueAt(table.getSelectedRow(),0).toString());
+					invoiceId.setText(Integer.toString(invNumber));
+					
+					tab = new JTable(Control.populateOrdersClean(invNumber));
+					int custNumber = Integer.parseInt(
+							tab.getValueAt(0,1).toString());
+					
+					//selecting customer from invoice
+					String custData = Control.selectCustomer(custNumber);
+					customerData.setText(custData);
+					
+					//selecting order date
+					String oDate = table.getValueAt(table.getSelectedRow(), 2).toString();
+					Date ordDate = null;
+					try {
+						ordDate = new SimpleDateFormat("yyyy-MM-dd").parse(oDate);
+					} catch (ParseException e1) {
+
+						e1.printStackTrace();
+					}
+					ordDateModel.setValue(ordDate);
+					
+					//selecting invoice date
+					String iDate = table.getValueAt(table.getSelectedRow(), 3).toString();
+					Date invDate = null;
+					try {
+						invDate = new SimpleDateFormat("yyyy-MM-dd").parse(iDate);
+					} catch (ParseException e1) {
+
+						e1.printStackTrace();
+					}
+					invDateModel.setValue(invDate);
+					
+					//selecting total from invoice
+					
+					String tot = table.getValueAt(table.getSelectedRow(), 4).toString();
+					totalField.setText(tot);
+					
+					//selecting invoice details into table
+					Control.selectOrders_DetailsLikeId(items, invNumber);
+				
+					
+					
+					dialInv.dispose();
+				}catch(ArrayIndexOutOfBoundsException a) {
+					JOptionPane.showMessageDialog(null, "Select invoice to accept!");
+				}catch(NullPointerException n) {
+					JOptionPane.showMessageDialog(null, "Null pointer...");
+				}
+				
+			}
+		});
+		
+		cancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dialInv.dispose();	
+			}
+		});
+		
 		searchField.addActionListener(searchAction);
 		search.addActionListener(searchAction);
 		
@@ -144,6 +217,7 @@ public class InvoiceSearch {
 		NorthPanIn.add(searchField);
 		CenterPanIn.add(scr);
 		SouthPanIn.add(accept);
+		SouthPanIn.add(cancel);
 		
 		NorthPan.add(NorthPanIn);
 		CenterPan.add(CenterPanIn);
@@ -161,5 +235,4 @@ public class InvoiceSearch {
 		});
 		
 	}
-
 }
