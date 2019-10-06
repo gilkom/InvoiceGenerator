@@ -163,6 +163,12 @@ public class Control {
 		List<Product> products = i.selectProductLikeId(prodId);
 		return products;
 	}
+	public static String selectProductNameLikeId(int prodId) {
+		Invoice i = new Invoice();
+		List<Product> products = i.selectProductLikeId(prodId);
+		String result = products.get(0).getProductName();
+		return result;
+	}	
 	public static List<Product> selectProduct() {
 		Invoice i = new Invoice();
 		List<Product> products = i.selectProduct();

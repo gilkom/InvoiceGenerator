@@ -82,9 +82,11 @@ public class EditingItem {
 					//calculating and setting totalGross value
 					int rowCounter = tab.getRowCount();
 					double totalGross = 0;
-					for(int i =0; i < rowCounter; i++)
-						totalGross = totalGross + (Double)tab.getValueAt(i, 7);
-					
+					String tot = "";
+					for(int i =0; i < rowCounter; i++) {
+						tot = tab.getValueAt(i, 7).toString();
+						totalGross = totalGross + Double.parseDouble(tot);
+					}
 					totalField.setText(Control.formatValue(totalGross));
 					dial.dispose();
 				}else {

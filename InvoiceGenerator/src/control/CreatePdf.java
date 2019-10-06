@@ -118,7 +118,7 @@ public class CreatePdf {
 
 			
 			String itemNo = Integer.toString(orders_details_list.get(i).getItemNumber());
-			String itemName = products.get(orders_details_list.get(i).getProductId()).getProductName();
+			String itemName = Control.selectProductNameLikeId(orders_details_list.get(i).getProductId()); 
 			String itemQuantity = Integer.toString(
 					orders_details_list.get(i).getItemQuantity());
 			String purchasePrice = Double.toString(
